@@ -7,7 +7,7 @@ public class Robot {
         north, south, east,west
     }
 
-    public GraphNode current;
+    public Node current;
 
 
 }
