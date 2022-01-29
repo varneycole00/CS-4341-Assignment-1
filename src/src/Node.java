@@ -121,7 +121,9 @@ public class Node implements Comparable<Node> {
         for(int id : ids){
             System.out.print(id + " ");
         }
+
         System.out.println("");
+
     }
 
 
