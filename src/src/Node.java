@@ -62,43 +62,43 @@ public class Node implements Comparable<Node> {
      */
     public static Node aStar(Node start, Node target, String mode) {
         // Priority Queue is just a heap built using priorities.
-        PriorityQueue<Node> closedList = new PriorityQueue<>();
-        PriorityQueue<Node> openList = new PriorityQueue<>();
+        PriorityQueue<Node> expanded = new PriorityQueue<>();
+        PriorityQueue<Node> toExpand = new PriorityQueue<>();
 
         start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, "Default");
-        openList.add(start);
+        toExpand.add(start);
 
-        while(!openList.isEmpty()){
-            Node n = openList.peek();
+        while(!toExpand.isEmpty()){
+            Node n = toExpand.peek();
             if(n == target){
                 return n;
             }
 
             for(Node.Edge edge : n.neighbors){
-                Node m = edge.node;
+                Node node = edge.node;
                 double totalWeight = n.timeTraveled + edge.weight;
 
-                if(!openList.contains(m) && !closedList.contains(m)){
-                    m.parent = n;
-                    m.timeTraveled = totalWeight;
-                    m.AStarEstimate = m.timeTraveled + m.calculateHeuristic(target,"Default");
-                    openList.add(m);
+                if(!toExpand.contains(node) && !expanded.contains(node)){
+                    node.parent = n;
+                    node.timeTraveled = totalWeight;
+                    node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target,"Default");
+                    toExpand.add(node);
                 } else {
-                    if(totalWeight < m.timeTraveled){
-                        m.parent = n;
-                        m.timeTraveled = totalWeight;
-                        m.AStarEstimate = m.timeTraveled + m.calculateHeuristic(target, "Default");
+                    if(totalWeight < node.timeTraveled){
+                        node.parent = n;
+                        node.timeTraveled = totalWeight;
+                        node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, "Default");
 
-                        if(closedList.contains(m)){
-                            closedList.remove(m);
-                            openList.add(m);
+                        if(expanded.contains(node)){
+                            expanded.remove(node);
+                            toExpand.add(node);
                         }
                     }
                 }
             }
 
-            openList.remove(n);
-            closedList.add(n);
+            toExpand.remove(n);
+            expanded.add(n);
         }
         return null;
     }
