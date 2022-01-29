@@ -2,12 +2,10 @@
 
 
 public class Robot {
+    
+    Direction robotDirection;
 
-    private enum Facing{
-        north, south, east,west
-    }
 
-    public Node current;
 
 
 }
