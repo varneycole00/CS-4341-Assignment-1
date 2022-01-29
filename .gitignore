@@ -1,0 +1,9 @@
+# Default ignored files
+/shelf/
+/.idea/workspace.xml
+/.idea
+# Datasource local storage ignored files
+/../../../../../../:\Users\varne\IdeaProjects\CS-4341-Assignment-1\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
