@@ -7,6 +7,7 @@ public class Node implements Comparable<Node> {
 
     private static int idCounter = 0;
     public int id;
+    public int difficulty;
 
     public Node parent = null;
     public List<Edge> neighbors;
@@ -16,10 +17,11 @@ public class Node implements Comparable<Node> {
 
     public double h;
 
-    Node(double h) {
+    Node(double h, int difficulty) {
         this.h = h;
         this.id = idCounter++; // We may want to implement a different ID system
         this.neighbors = new ArrayList<>();
+        this.difficulty = difficulty;
     }
 
     @Override
@@ -41,15 +43,29 @@ public class Node implements Comparable<Node> {
         neighbors.add(newEdge);
     }
 
-    public double calculateHeuristic(Node target) {
-        return this.h;
+    /* Todo: adjust this method to take in a flag and calculate heuristics differently
+        depending on the A* mode) */
+    public double calculateHeuristic(Node target, String mode) {
+        if (mode.equals("Default")) {
+            return this.h;
+        } else {
+            return -1;
+        }
     }
 
-    public static Node aStar(Node start, Node target){
+    /**
+     * aStar takes in a start node and an end node and uses the aStar algorithm to
+     * determine the quickest path
+     * @param start
+     * @param target
+     * @return
+     */
+    public static Node aStar(Node start, Node target, String mode) {
+        // Priority Queue is just a heap built using priorities.
         PriorityQueue<Node> closedList = new PriorityQueue<>();
         PriorityQueue<Node> openList = new PriorityQueue<>();
 
-        start.f = start.g + start.calculateHeuristic(target);
+        start.f = start.g + start.calculateHeuristic(target, "Default");
         openList.add(start);
 
         while(!openList.isEmpty()){
