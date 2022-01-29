@@ -1,6 +1,7 @@
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class main {
@@ -14,7 +15,7 @@ public class main {
     }
 
     public String[][] loadTerrain(String fileName) {
-        List<String> lines;
+        List<String> lines = new ArrayList<String>();
 
         try{
             lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
