@@ -12,13 +12,13 @@ public class Node implements Comparable<Node> {
     public Node parent = null;
     public List<Edge> neighbors;
 
-    public double f = Double.MAX_VALUE;
-    public double g = Double.MAX_VALUE;
 
-    public double h;
+    public double AStarEstimate = Double.MAX_VALUE;
+    public double timeTraveled = Double.MAX_VALUE;
+    public double timeRemainingEstimate;
 
     Node(double h, int difficulty) {
-        this.h = h;
+        this.timeRemainingEstimate = h;
         this.id = idCounter++; // We may want to implement a different ID system
         this.neighbors = new ArrayList<>();
         this.difficulty = difficulty;
@@ -26,7 +26,7 @@ public class Node implements Comparable<Node> {
 
     @Override
     public int compareTo(Node n) {
-        return Double.compare(this.f, n.f);
+        return Double.compare(this.AStarEstimate, n.AStarEstimate);
     }
 
     public static class Edge {
@@ -47,7 +47,7 @@ public class Node implements Comparable<Node> {
         depending on the A* mode) */
     public double calculateHeuristic(Node target, String mode) {
         if (mode.equals("Default")) {
-            return this.h;
+            return this.timeRemainingEstimate;
         } else {
             return -1;
         }
@@ -65,7 +65,7 @@ public class Node implements Comparable<Node> {
         PriorityQueue<Node> closedList = new PriorityQueue<>();
         PriorityQueue<Node> openList = new PriorityQueue<>();
 
-        start.f = start.g + start.calculateHeuristic(target, "Default");
+        start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, "Default");
         openList.add(start);
 
         while(!openList.isEmpty()){
@@ -76,18 +76,18 @@ public class Node implements Comparable<Node> {
 
             for(Node.Edge edge : n.neighbors){
                 Node m = edge.node;
-                double totalWeight = n.g + edge.weight;
+                double totalWeight = n.timeTraveled + edge.weight;
 
                 if(!openList.contains(m) && !closedList.contains(m)){
                     m.parent = n;
-                    m.g = totalWeight;
-                    m.f = m.g + m.calculateHeuristic(target);
+                    m.timeTraveled = totalWeight;
+                    m.AStarEstimate = m.timeTraveled + m.calculateHeuristic(target,"Default");
                     openList.add(m);
                 } else {
-                    if(totalWeight < m.g){
+                    if(totalWeight < m.timeTraveled){
                         m.parent = n;
-                        m.g = totalWeight;
-                        m.f = m.g + m.calculateHeuristic(target);
+                        m.timeTraveled = totalWeight;
+                        m.AStarEstimate = m.timeTraveled + m.calculateHeuristic(target, "Default");
 
                         if(closedList.contains(m)){
                             closedList.remove(m);
