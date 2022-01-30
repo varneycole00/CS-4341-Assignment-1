@@ -30,6 +30,16 @@ public class Node implements Comparable<Node> {
         this.robot = robot;
     }
 
+    Node(double h, int difficulty, int xPos, int yPos) {
+        this.timeRemainingEstimate = h;
+        this.id = idCounter++; // We may want to implement a different ID system
+        this.neighbors = new ArrayList<>();
+        this.difficulty = difficulty;
+        this.xPos = xPos;
+        this.yPos = yPos;
+    }
+
+
     @Override
     public int compareTo(Node n) {
         return Double.compare(this.AStarEstimate, n.AStarEstimate);
