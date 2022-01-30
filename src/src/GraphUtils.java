@@ -16,7 +16,7 @@ public class GraphUtils {
         return graph;
     }
 
-    public static String[][] loadTerrain(String fileName) {
+    private static String[][] loadTerrain(String fileName) {
         List<String> lines = new ArrayList<String>();
 
         try{
@@ -50,6 +50,56 @@ public class GraphUtils {
                     graph[y][x] = new Node(Integer.MAX_VALUE, Integer.valueOf(s), x, y);
                 x++;
             }
+            y++;
+        }
+        findEdges();
+    }
+
+    private static void findEdges(){
+        int y = 1;
+        Node left;
+        Node right;
+        Node up;
+        Node down;
+        for (Node[] a : graph){
+            int x = 1;
+            for (Node n : a){
+                try{
+                    left = graph[y-1][x-2];}
+                catch(Exception e){
+                    left = null;
+                }
+
+                try{
+                    right = graph[y-1][x];}
+                catch(Exception e){
+                    right = null;
+                }
+
+                try{
+                    up = graph[y-2][x-1];}
+                catch(Exception e){
+                    up = null;
+                }
+
+                try{
+                    down = graph[y][x-1];}
+                catch(Exception e){
+                    down = null;
+                }
+
+                if (left != null)
+                    n.addBranch(left.difficulty, left, Direction.WEST);
+                if (right != null)
+                    n.addBranch(right.difficulty, right, Direction.EAST);
+                if (up != null)
+                    n.addBranch(up.difficulty, up, Direction.NORTH);
+                if (down != null)
+                    n.addBranch(down.difficulty, down, Direction.SOUTH);
+
+                x++;
+            }
+
             y++;
         }
     }
