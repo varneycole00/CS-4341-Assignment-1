@@ -11,7 +11,7 @@ public class main {
 
     public static void main(String[] args) {
         // Main code block initiating execution
-
+        GraphUtils.makeGraph(args[1]);
         // We could potentially build graph in here.
     }
 

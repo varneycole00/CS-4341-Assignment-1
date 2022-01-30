@@ -54,6 +54,22 @@ public class GraphUtils {
         }
     }
 
+    // TODO: Test this bish
+    public static Direction calculateDirection(int xStart, int yStart, int xEnd, int yEnd) throws Exception {
+        if(xStart != xEnd && yStart != yEnd) {
+            throw new Exception("Could not calculate direction");
+        } if(xStart > xEnd) {
+            return Direction.EAST;
+        } if(xStart < xEnd) {
+            return Direction.WEST;
+        } if(yStart > yEnd) {
+            return Direction.SOUTH;
+        } if(yStart < yEnd) {
+            return Direction.NORTH;
+        }
+        throw new Exception("could not calculate");
+    }
+
 
 
 
