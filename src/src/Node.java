@@ -21,6 +21,7 @@ public class Node implements Comparable<Node> {
     public int xPos;
     public int yPos;
     Robot robot;
+    public int turns;
 
     Node(double h, int difficulty, int xPos, int yPos, Robot robot) {
         this.timeRemainingEstimate = h;
@@ -30,6 +31,7 @@ public class Node implements Comparable<Node> {
         this.xPos = xPos;
         this.yPos = yPos;
         this.robot = robot;
+        this.turns = 0;
     }
 
     Node(double h, int difficulty, int xPos, int yPos) {
@@ -39,6 +41,7 @@ public class Node implements Comparable<Node> {
         this.difficulty = difficulty;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.turns = 0;
     }
 
 
@@ -175,6 +178,7 @@ public class Node implements Comparable<Node> {
      */
     public static Node aStar(Node start, Node target, String mode) throws Exception {
         // Priority Queue is just a heap built using priorities.
+        int turns = 0;
         PriorityQueue<Node> expanded = new PriorityQueue<>();
         PriorityQueue<Node> toExpand = new PriorityQueue<>();
 
@@ -194,11 +198,16 @@ public class Node implements Comparable<Node> {
                 if(!toExpand.contains(node) && !expanded.contains(node)){
                     node.parent = n;
                     node.timeTraveled = totalWeight;
+                    node.robot = new Robot(n.robot.robotDirection);
 
-                    if(edge.direction != n.robot.robotDirection) //adds to time for turning
-                        node.timeTraveled++;
+                    if(edge.direction != node.robot.robotDirection) { //adds to time for turning
+                        turns = node.robot.calculateShortestTurns(edge.direction);
+                        node.timeTraveled += node.difficulty * .5 * turns;
+                        node.turns += turns;
+                        node.robot.robotDirection = edge.direction;
+                    }
 
-                    node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
+                     // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
                 } else {
@@ -206,9 +215,14 @@ public class Node implements Comparable<Node> {
                         node.parent = n;
                         node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
                         node.timeTraveled = totalWeight;
+                        node.robot = new Robot(n.robot.robotDirection);
 
-                        if(edge.direction != n.robot.robotDirection) //adds to time for turning
-                            node.timeTraveled++;
+                        if(edge.direction != node.robot.robotDirection) { //adds to time for turning
+                            turns = node.robot.calculateShortestTurns(edge.direction);
+                            node.timeTraveled += node.difficulty * .5 * turns;
+                            node.turns += turns;
+                            node.robot.robotDirection = edge.direction;
+                        }
 
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
@@ -229,25 +243,9 @@ public class Node implements Comparable<Node> {
 
     // TODO: configure to meet assignment conditions
     public static void printPath(Node target){
-        Node n = target;
 
-        if(n==null)
-            return;
-
-        List<Integer> ids = new ArrayList<>();
-
-        while(n.parent != null){
-            ids.add(n.id);
-            n = n.parent;
-        }
-        ids.add(n.id);
-        Collections.reverse(ids);
-
-        for(int id : ids){
-            System.out.print(id + " ");
-        }
-
-        System.out.println("");
+        String output = GameState.getInstance().generateOutputString(target);
+        System.out.println(output);
 
     }
 

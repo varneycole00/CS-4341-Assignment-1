@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameState {
@@ -37,15 +38,34 @@ public class GameState {
         outputText.add(movementType.toString());
     }
 
-    public String generateOutputString() {
-        String ret = "";
+    public String generateOutputString(Node target) {
 
-        for (String s: outputText) {
-            ret = ret + s + "\n";
+        Node n = target;
+
+        if (n == null)
+            return;
+
+        List<Integer> ids = new ArrayList<>();
+
+        while (n.parent != null) {
+            ids.add(n.id);
+            n = n.parent;
+        }
+        ids.add(n.id);
+        Collections.reverse(ids);
+
+        for (int id : ids) {
+            System.out.print(id + " ");
         }
 
-        return ret;
+        System.out.println("");
+
+//        String ret = "";
+//
+//        for (String s: outputText) {
+//            ret = ret + s + "\n";
+//        }
+//
+//        return ret;
     }
-
-
 }
