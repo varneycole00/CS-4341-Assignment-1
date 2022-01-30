@@ -16,12 +16,18 @@ public class Node implements Comparable<Node> {
     public double AStarEstimate = Double.MAX_VALUE;
     public double timeTraveled = Double.MAX_VALUE;
     public double timeRemainingEstimate;
+    public int xPos;
+    public int yPos;
+    Robot robot;
 
-    Node(double h, int difficulty) {
+    Node(double h, int difficulty, int xPos, int yPos, Robot robot) {
         this.timeRemainingEstimate = h;
         this.id = idCounter++; // We may want to implement a different ID system
         this.neighbors = new ArrayList<>();
         this.difficulty = difficulty;
+        this.xPos = xPos;
+        this.yPos = yPos;
+        this.robot = robot;
     }
 
     @Override
@@ -56,6 +62,7 @@ public class Node implements Comparable<Node> {
                 return 0;
             case "min":
                 // TODO: Mode 'min' (vertical, horizontal) that takes the smaller
+                minModeHeuristic(target);
             case "max":
                 // TODO: Mode: 'max' (vertical, horizontal) that takes the larger
             case "sum":
@@ -65,6 +72,17 @@ public class Node implements Comparable<Node> {
                 // TODO: Mode: 'TBA' that is non-admissible by multiplying 'sum' and previous
 
         }
+        return -1;
+    }
+    public int minModeHeuristic(Node target) {
+        // acquire desired x and y positioning
+        int xTarget = target.xPos;
+        int yTarget = target.yPos;
+        Direction robotDirection ;
+        // take note of robot positioning at current node
+        // calculate estimate of horizontal movements only
+        // calculate estimate of vertical movements only
+        // return minimum of the two
         return -1;
     }
 
