@@ -1,50 +1,107 @@
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
 public class GraphUtils {
 
-    private boolean adjMatrix[][];
-    private int numNodes;
+    static Node[][] graph;
+    static Robot robot;
 
-    // Initialize the matrix
-    public GraphUtils(int numNodes) {
-        this.numNodes = numNodes;
-        adjMatrix = new boolean[numNodes][numNodes];
+    public  GraphUtils(Node[][] graph) {
+        this.graph = graph;
+    }
+    public static Node[][] getGraph() {
+        return graph;
     }
 
-    // Add edges
-    public void addEdge(int i, int j) {
-        adjMatrix[i][j] = true;
-        adjMatrix[j][i] = true;
-    }
+    public static String[][] loadTerrain(String fileName) {
+        List<String> lines = new ArrayList<String>();
 
-    // Remove edges
-    public void removeEdge(int i, int j) {
-        adjMatrix[i][j] = false;
-        adjMatrix[j][i] = false;
-    }
-
-    // Print the matrix
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < numNodes; i++) {
-            s.append(i + ": ");
-            for (boolean j : adjMatrix[i]) {
-                s.append((j ? 1 : 0) + " ");
-            }
-            s.append("\n");
+        try{
+            lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
         }
-        return s.toString();
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        String[][] fileArray = new String[lines.size()][];
+
+        for(int i =0; i<lines.size(); i++){
+            fileArray[i] = lines.get(i).split("\t"); //tab-separated
+        }
+
+        return fileArray;
     }
 
-    public static void main(String args[]) {
-        GraphUtils g = new GraphUtils(4);
-
-        g.addEdge(0, 1);
-        g.addEdge(0, 2);
-        g.addEdge(1, 2);
-        g.addEdge(2, 0);
-        g.addEdge(2, 3);
-
-        System.out.print(g.toString());
+    public static void makeGraph(String fileName){
+        String[][] fileArray = loadTerrain(fileName);
+        graph = new Node[fileArray.length][fileArray[0].length];
+        robot = new Robot(Direction.NORTH);
+        int y = 1;
+        for (String[] a : fileArray){
+            int x = 1;
+            for (String s : a){
+                if (s == "s" || s == "S")
+                    graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
+                else if (s == "g" || s == "G")
+                    graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y);
+                else
+                    graph[y][x] = new Node(Integer.MAX_VALUE, Integer.valueOf(s), x, y);
+                x++;
+            }
+            y++;
+        }
     }
+
+
+
+
+//    private boolean adjMatrix[][];
+//    private int numNodes;
+//
+//    // Initialize the matrix
+//    public GraphUtils(int numNodes) {
+//        this.numNodes = numNodes;
+//        adjMatrix = new boolean[numNodes][numNodes];
+//    }
+//
+//    // Add edges
+//    public void addEdge(int i, int j) {
+//        adjMatrix[i][j] = true;
+//        adjMatrix[j][i] = true;
+//    }
+//
+//    // Remove edges
+//    public void removeEdge(int i, int j) {
+//        adjMatrix[i][j] = false;
+//        adjMatrix[j][i] = false;
+//    }
+//
+//    // Print the matrix
+//    public String toString() {
+//        StringBuilder s = new StringBuilder();
+//        for (int i = 0; i < numNodes; i++) {
+//            s.append(i + ": ");
+//            for (boolean j : adjMatrix[i]) {
+//                s.append((j ? 1 : 0) + " ");
+//            }
+//            s.append("\n");
+//        }
+//        return s.toString();
+//    }
+//
+//    public static void main(String args[]) {
+//        GraphUtils g = new GraphUtils(4);
+//
+//        g.addEdge(0, 1);
+//        g.addEdge(0, 2);
+//        g.addEdge(1, 2);
+//        g.addEdge(2, 0);
+//        g.addEdge(2, 3);
+//
+//        System.out.print(g.toString());
+//    }
 
 
 }

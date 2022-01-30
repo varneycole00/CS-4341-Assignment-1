@@ -5,6 +5,8 @@ import java.util.PriorityQueue;
 
 public class Node implements Comparable<Node> {
 
+    public static Node[][] graph = GraphUtils.getGraph();
+
     private static int idCounter = 0;
     public int id;
     public int difficulty;
