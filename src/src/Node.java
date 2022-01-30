@@ -113,12 +113,16 @@ public class Node implements Comparable<Node> {
         // calculate estimate of horizontal movements only
         if(xStart > xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.WEST)
+                horizontalEstimate++;
             for(int i = xStart ; i >= xTarget ; i--) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
         }
         else if(xStart < xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.EAST)
+                horizontalEstimate++;
             for(int i = xStart ; i <= xTarget ; i++) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
@@ -126,12 +130,16 @@ public class Node implements Comparable<Node> {
         // calculate estimate of vertical movements only
         if(yStart > yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.NORTH)
+                verticalEstimate++;
             for(int i = yStart ; i >= yTarget ; i--) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
         }
         else if(yStart < yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.SOUTH)
+                verticalEstimate++;
             for(int i = yStart ; i <= yTarget ; i++) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }

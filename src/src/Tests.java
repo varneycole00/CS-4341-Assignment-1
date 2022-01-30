@@ -13,8 +13,8 @@ public class Tests {
 //            System.out.print(e.difficulty + ", ");
 //        }
 
-        Node.aStar(graph[2][2], graph[1][0], "min");
-        Node.printPath(graph[1][0]);
+        Node.aStar(graph[2][2], graph[0][1], "min");
+        Node.printPath(graph[0][1]);
 
     }
 }
