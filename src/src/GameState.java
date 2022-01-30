@@ -18,6 +18,7 @@ public class GameState {
 
     /**
      * Getter for instance.
+     *
      * @return the current instance of GameState
      */
     public static GameState getInstance() {
@@ -38,7 +39,7 @@ public class GameState {
         outputText.add(movementType.toString());
     }
 
-    public String generateOutputString(Node target) {
+    public void generateOutputString(Node target) {
         Node n = target;
 
         List<Integer> ids = new ArrayList<>();
@@ -65,3 +66,4 @@ public class GameState {
 //        return ret;
     }
 }
+
