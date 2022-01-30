@@ -73,13 +73,13 @@ public class Node implements Comparable<Node> {
                 return 0;
             case "min":
                 // Mode 'min' (vertical, horizontal) that takes the smaller
-                return minModeHeuristic(target, "min");
+                return calculateProvided(target, "min");
             case "max":
                 // Mode: 'max' (vertical, horizontal) that takes the larger
-                return minModeHeuristic(target, "max");
+                return calculateProvided(target, "max");
             case "sum":
                 // Mode: 'sum' takes vertical + horizontal distance
-                return minModeHeuristic(target, "sum");
+                return calculateProvided(target, "sum");
 
 
                 // TODO: Mode: 'TBA' admissible and dominates 'sum'
@@ -90,7 +90,7 @@ public class Node implements Comparable<Node> {
         }
     }
 
-    public int minModeHeuristic(Node target, String mode) throws Exception {
+    public int calculateProvided(Node target, String mode) throws Exception {
         int horizontalEstimate = 0;
         int verticalEstimate = 0;
 
