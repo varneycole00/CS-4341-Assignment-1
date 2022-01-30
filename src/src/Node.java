@@ -46,11 +46,24 @@ public class Node implements Comparable<Node> {
     /* Todo: adjust this method to take in a flag and calculate heuristics differently
         depending on the A* mode) */
     public double calculateHeuristic(Node target, String mode) {
-        if (mode.equals("Default")) {
-            return this.timeRemainingEstimate;
-        } else {
-            return -1;
+        switch(mode) {
+            case "default":
+                return this.timeRemainingEstimate;
+            case "zero":
+                // Mode 'zero' where always zero
+                return 0;
+            case "min":
+                // TODO: Mode 'min' (vertical, horizontal) that takes the smaller
+            case "max":
+                // TODO: Mode: 'max' (vertical, horizontal) that takes the larger
+            case "sum":
+                // TODO: Mode: 'sum' takes vertical + horizontal distance
+
+                // TODO: Mode: 'TBA' admissible and dominates 'sum'
+                // TODO: Mode: 'TBA' that is non-admissible by multiplying 'sum' and previous
+
         }
+        return -1;
     }
 
     /**
@@ -103,6 +116,7 @@ public class Node implements Comparable<Node> {
         return null;
     }
 
+    // TODO: configure to meet assignment conditions
     public static void printPath(Node target){
         Node n = target;
 
