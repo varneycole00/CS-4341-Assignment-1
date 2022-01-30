@@ -58,53 +58,104 @@ public class Node implements Comparable<Node> {
         public Direction direction;
     }
 
-    public void addBranch(int weight, Node node, Direction direction) {
-        Edge newEdge = new Edge(weight, node, direction);
+    public void addBranch(int difficulty, Node node, Direction direction) {
+        Edge newEdge = new Edge(difficulty, node, direction);
         neighbors.add(newEdge);
     }
 
     /* Todo: adjust this method to take in a flag and calculate heuristics differently
         depending on the A* mode) */
-    public double calculateHeuristic(Node target, String mode) {
+    public double calculateHeuristic(Node target, String mode) throws Exception {
         switch(mode) {
-            case "default":
-                return this.timeRemainingEstimate;
+
             case "zero":
                 // Mode 'zero' where always zero
                 return 0;
             case "min":
-                // TODO: Mode 'min' (vertical, horizontal) that takes the smaller
-                return minModeHeuristic(target);
+                // Mode 'min' (vertical, horizontal) that takes the smaller
+                return calculateProvided(target, "min");
             case "max":
-                // TODO: Mode: 'max' (vertical, horizontal) that takes the larger
+                // Mode: 'max' (vertical, horizontal) that takes the larger
+                return calculateProvided(target, "max");
             case "sum":
-                // TODO: Mode: 'sum' takes vertical + horizontal distance
+                // Mode: 'sum' takes vertical + horizontal distance
+                return calculateProvided(target, "sum");
+
 
                 // TODO: Mode: 'TBA' admissible and dominates 'sum'
                 // TODO: Mode: 'TBA' that is non-admissible by multiplying 'sum' and previous
+            default:
+                return this.timeRemainingEstimate;
 
         }
-        return -1;
     }
-    public int minModeHeuristic(Node target) {
+
+    public int calculateProvided(Node target, String mode) throws Exception {
         int horizontalEstimate = 0;
         int verticalEstimate = 0;
 
         // acquire desired x and y positioning
         int xTarget = target.xPos;
         int yTarget = target.yPos;
+
+        // start x and y pos
+        int xStart = this.xPos;
+        int yStart = this.yPos;
+
         // current x and y pos
         int xCurrent = this.xPos;
         int yCurrent = this.yPos;
 
         // take note of robot positioning at current node
-        Direction robotDirection = this.robot.robotDirection;
+        Direction startDirection = this.robot.robotDirection;
+        Direction robotDirection = startDirection;
 
         // calculate estimate of horizontal movements only
-
+        if(xStart > xTarget) {
+            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            for(int i = xStart ; i >= xTarget ; i--) {
+                horizontalEstimate += graph[i][yStart].difficulty;
+            }
+        }
+        else if(xStart < xTarget) {
+            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            for(int i = xStart ; i <= xTarget ; i++) {
+                horizontalEstimate += graph[i][yStart].difficulty;
+            }
+        }
         // calculate estimate of vertical movements only
+        if(yStart > yTarget) {
+            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            for(int i = yStart ; i >= yTarget ; i--) {
+                verticalEstimate += graph[xStart][i].difficulty;
+            }
+        }
+        else if(yStart < yTarget) {
+            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            for(int i = yStart ; i <= yTarget ; i++) {
+                verticalEstimate += graph[xStart][i].difficulty;
+            }
+        }
         // return minimum of the two
-        return -1;
+        switch(mode) {
+            case "min":
+                if(horizontalEstimate <= verticalEstimate) {
+                    return horizontalEstimate;
+                } else {
+                    return verticalEstimate;
+                }
+            case "max":
+                if(horizontalEstimate >= verticalEstimate) {
+                    return horizontalEstimate;
+                }
+                else {
+                    return verticalEstimate;
+                }
+            case "sum":
+                return verticalEstimate + horizontalEstimate;
+            default:
+                return -1;
+        }
     }
 
     /**
@@ -114,12 +165,12 @@ public class Node implements Comparable<Node> {
      * @param target
      * @return
      */
-    public static Node aStar(Node start, Node target, String mode) {
+    public static Node aStar(Node start, Node target, String mode) throws Exception {
         // Priority Queue is just a heap built using priorities.
         PriorityQueue<Node> expanded = new PriorityQueue<>();
         PriorityQueue<Node> toExpand = new PriorityQueue<>();
 
-        start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, "Default");
+        start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, mode);
         toExpand.add(start);
 
         while(!toExpand.isEmpty()){
@@ -135,13 +186,14 @@ public class Node implements Comparable<Node> {
                 if(!toExpand.contains(node) && !expanded.contains(node)){
                     node.parent = n;
                     node.timeTraveled = totalWeight;
-                    node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target,"Default");
+                    node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
                         node.timeTraveled = totalWeight;
-                        node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, "Default");
+                        node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
+
 
                         if(expanded.contains(node)){
                             expanded.remove(node);
