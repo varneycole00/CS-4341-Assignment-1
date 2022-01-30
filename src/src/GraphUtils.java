@@ -1,16 +1,10 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.util.*;
-import java.nio.file.*;
-import java.nio.charset.*;
-
-public class Graph{
+public class GraphUtils {
 
     private boolean adjMatrix[][];
     private int numNodes;
 
     // Initialize the matrix
-    public Graph(int numNodes) {
+    public GraphUtils(int numNodes) {
         this.numNodes = numNodes;
         adjMatrix = new boolean[numNodes][numNodes];
     }
@@ -41,7 +35,7 @@ public class Graph{
     }
 
     public static void main(String args[]) {
-        Graph g = new Graph(4);
+        GraphUtils g = new GraphUtils(4);
 
         g.addEdge(0, 1);
         g.addEdge(0, 2);

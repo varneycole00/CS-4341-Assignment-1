@@ -72,7 +72,7 @@ public class Node implements Comparable<Node> {
                 return 0;
             case "min":
                 // TODO: Mode 'min' (vertical, horizontal) that takes the smaller
-                minModeHeuristic(target);
+                return minModeHeuristic(target);
             case "max":
                 // TODO: Mode: 'max' (vertical, horizontal) that takes the larger
             case "sum":
@@ -85,12 +85,21 @@ public class Node implements Comparable<Node> {
         return -1;
     }
     public int minModeHeuristic(Node target) {
+        int horizontalEstimate = 0;
+        int verticalEstimate = 0;
+
         // acquire desired x and y positioning
         int xTarget = target.xPos;
         int yTarget = target.yPos;
-        Direction robotDirection ;
+        // current x and y pos
+        int xCurrent = this.xPos;
+        int yCurrent = this.yPos;
+
         // take note of robot positioning at current node
+        Direction robotDirection = this.robot.robotDirection;
+
         // calculate estimate of horizontal movements only
+
         // calculate estimate of vertical movements only
         // return minimum of the two
         return -1;
