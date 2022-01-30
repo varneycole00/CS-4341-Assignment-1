@@ -1,11 +1,12 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameState {
     private static GameState instance = null;
     private int score = 0;
     private int numActions = 0;
     private int numNodeExpanded = 0;
-    private ArrayList<String> outputText = new ArrayList<String>();
+    private List<String> outputText = new ArrayList<String>();
 
     /**
      * The constructor for GameState.
