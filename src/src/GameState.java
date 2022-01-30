@@ -39,15 +39,29 @@ public class GameState {
     }
 
     public String generateOutputString(Node target) {
+        Node n = target;
 
+        List<Integer> ids = new ArrayList<>();
 
+        while (n.parent != null) {
+            ids.add(n.id);
+            n = n.parent;
+        }
+        ids.add(n.id);
+        Collections.reverse(ids);
 
-        String ret = "";
-
-        for (String s: outputText) {
-            ret = ret + s + "\n";
+        for (int id : ids) {
+            System.out.print(id + " ");
         }
 
-        return ret;
+        System.out.println("");
+
+//        String ret = "";
+//
+//        for (String s: outputText) {
+//            ret = ret + s + "\n";
+//        }
+//
+//        return ret;
     }
 }
