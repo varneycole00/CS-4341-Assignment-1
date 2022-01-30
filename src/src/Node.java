@@ -114,26 +114,26 @@ public class Node implements Comparable<Node> {
         if(xStart > xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             for(int i = xStart ; i >= xTarget ; i--) {
-                horizontalEstimate += graph[i][yStart].difficulty;
+                horizontalEstimate += graph[yStart][i].difficulty;
             }
         }
         else if(xStart < xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             for(int i = xStart ; i <= xTarget ; i++) {
-                horizontalEstimate += graph[i][yStart].difficulty;
+                horizontalEstimate += graph[yStart][i].difficulty;
             }
         }
         // calculate estimate of vertical movements only
         if(yStart > yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             for(int i = yStart ; i >= yTarget ; i--) {
-                verticalEstimate += graph[xStart][i].difficulty;
+                verticalEstimate += graph[i][xStart].difficulty;
             }
         }
         else if(yStart < yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             for(int i = yStart ; i <= yTarget ; i++) {
-                verticalEstimate += graph[xStart][i].difficulty;
+                verticalEstimate += graph[i][xStart].difficulty;
             }
         }
         // return minimum of the two
@@ -186,11 +186,14 @@ public class Node implements Comparable<Node> {
                 if(!toExpand.contains(node) && !expanded.contains(node)){
                     node.parent = n;
                     node.timeTraveled = totalWeight;
+
+                    node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
+                        node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
                         node.timeTraveled = totalWeight;
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
