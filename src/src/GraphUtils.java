@@ -42,8 +42,10 @@ public class GraphUtils {
         for (String[] a : fileArray){
             int x = 0;
             for (String s : a){
-                if (s.equals("S") || s.equals("s"))
+                if (s.equals("S") || s.equals("s")) {
                     graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
+                    graph[y][x].timeTraveled = 0;
+                }
                 else if (s.equals("G") || s.equals("g"))
                     graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y);
                 else

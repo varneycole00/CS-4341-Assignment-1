@@ -40,32 +40,14 @@ public class GameState {
 
     public String generateOutputString(Node target) {
 
-        Node n = target;
 
-        if (n == null)
-            return;
 
-        List<Integer> ids = new ArrayList<>();
+        String ret = "";
 
-        while (n.parent != null) {
-            ids.add(n.id);
-            n = n.parent;
-        }
-        ids.add(n.id);
-        Collections.reverse(ids);
-
-        for (int id : ids) {
-            System.out.print(id + " ");
+        for (String s: outputText) {
+            ret = ret + s + "\n";
         }
 
-        System.out.println("");
-
-//        String ret = "";
-//
-//        for (String s: outputText) {
-//            ret = ret + s + "\n";
-//        }
-//
-//        return ret;
+        return ret;
     }
 }

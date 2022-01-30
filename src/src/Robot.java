@@ -29,7 +29,7 @@ public class Robot {
         else if ((robotDirection == Direction.NORTH && (newDirection == Direction.EAST || newDirection == Direction.WEST))
                 || (robotDirection == Direction.WEST && (newDirection == Direction.NORTH || newDirection == Direction.SOUTH))
                 || (robotDirection == Direction.SOUTH && (newDirection == Direction.EAST || newDirection == Direction.WEST))
-                || (robotDirection == Direction.WEST && (newDirection == Direction.NORTH || newDirection == Direction.SOUTH))) {
+                || (robotDirection == Direction.EAST && (newDirection == Direction.NORTH || newDirection == Direction.SOUTH))) {
             return 1;
         } else {
             return 2;

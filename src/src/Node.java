@@ -83,17 +83,20 @@ public class Node implements Comparable<Node> {
             case "sum":
                 // Mode: 'sum' takes vertical + horizontal distance
                 return calculateProvided(target, "sum");
+            case "nonAdmissible":
+                // Mode: 'TBA' that is non-admissible by multiplying 'sum' by 3
+                return 3 * calculateProvided(target,"sum");
 
 
                 // TODO: Mode: 'TBA' admissible and dominates 'sum'
-                // TODO: Mode: 'TBA' that is non-admissible by multiplying 'sum' and previous
+
             default:
                 return this.timeRemainingEstimate;
 
         }
     }
 
-    public int calculateProvided(Node target, String mode) throws Exception {
+    public double calculateProvided(Node target, String mode) throws Exception {
         int horizontalEstimate = 0;
         int verticalEstimate = 0;
 
@@ -104,10 +107,6 @@ public class Node implements Comparable<Node> {
         // start x and y pos
         int xStart = this.xPos;
         int yStart = this.yPos;
-
-        // current x and y pos
-        int xCurrent = this.xPos;
-        int yCurrent = this.yPos;
 
         // take note of robot positioning at current node
         Direction startDirection = this.robot.robotDirection;
@@ -165,7 +164,7 @@ public class Node implements Comparable<Node> {
             case "sum":
                 return verticalEstimate + horizontalEstimate;
             default:
-                return -1;
+                return (int)this.timeRemainingEstimate;
         }
     }
 
@@ -178,7 +177,6 @@ public class Node implements Comparable<Node> {
      */
     public static Node aStar(Node start, Node target, String mode) throws Exception {
         // Priority Queue is just a heap built using priorities.
-        int turns = 0;
         PriorityQueue<Node> expanded = new PriorityQueue<>();
         PriorityQueue<Node> toExpand = new PriorityQueue<>();
 
@@ -200,12 +198,10 @@ public class Node implements Comparable<Node> {
                     node.timeTraveled = totalWeight;
                     node.robot = new Robot(n.robot.robotDirection);
 
-                    if(edge.direction != node.robot.robotDirection) { //adds to time for turning
-                        turns = node.robot.calculateShortestTurns(edge.direction);
-                        node.timeTraveled += node.difficulty * .5 * turns;
-                        node.turns += turns;
-                        node.robot.robotDirection = edge.direction;
-                    }
+                    // Handling turns
+                    handleTurns(node, edge);
+                    // handling Bash
+                    handleBash(node, edge);
 
                      // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
@@ -214,15 +210,12 @@ public class Node implements Comparable<Node> {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
                         node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
-                        node.timeTraveled = totalWeight;
-                        node.robot = new Robot(n.robot.robotDirection);
 
-                        if(edge.direction != node.robot.robotDirection) { //adds to time for turning
-                            turns = node.robot.calculateShortestTurns(edge.direction);
-                            node.timeTraveled += node.difficulty * .5 * turns;
-                            node.turns += turns;
-                            node.robot.robotDirection = edge.direction;
-                        }
+                        node.timeTraveled = totalWeight;
+                        // adds to time for turning
+                        handleTurns(node, edge);
+                        // Handling bash
+                        handleBash(node, edge);
 
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
@@ -241,11 +234,60 @@ public class Node implements Comparable<Node> {
         return null;
     }
 
+    public static void handleTurns(Node node, Edge edge) {
+        if(edge.direction != node.parent.robot.robotDirection) {
+            int turns = node.robot.calculateShortestTurns(edge.direction);
+            node.timeTraveled += node.difficulty * .5 * turns;
+            node.turns += turns;
+            node.robot.robotDirection = edge.direction;
+        }
+    }
+    public static void handleBash(Node node, Edge edge) {
+        try {
+            if (node.robot.robotDirection == node.parent.robot.robotDirection &&
+                node.parent.robot.robotDirection == node.parent.parent.robot.robotDirection &&
+                node.parent.difficulty > 3) {
+                node.timeTraveled -= (node.parent.difficulty - 3);
+                node.parent.robot.setBashPerformed(true);
+            }
+        } catch (Exception ignored) {
+        }
+
+    }
+
     // TODO: configure to meet assignment conditions
     public static void printPath(Node target){
 
-        String output = GameState.getInstance().generateOutputString(target);
-        System.out.println(output);
+    // String output = GameState.getInstance().generateOutputString(target);
+    // System.out.println(output);
+//        while(target != null) {
+//           target = target.parent;
+//        }
+
+        Node n = target;
+
+        if (n == null)
+            return;
+
+        List<Integer> ids = new ArrayList<>();
+
+        while (n.parent != null) {
+            ids.add(n.difficulty);
+            n = n.parent;
+            System.out.println(n.difficulty);
+            if(n.robot.getBashPerformed())
+                System.out.println("bash");
+            if(n.turns > 0)
+                System.out.println("turned " + n.turns + " times");
+        }
+        ids.add(n.difficulty);
+        Collections.reverse(ids);
+
+        for (int id : ids) {
+            System.out.print(id + " ");
+        }
+
+        System.out.println("");
 
     }
 
