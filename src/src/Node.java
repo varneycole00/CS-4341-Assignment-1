@@ -30,11 +30,11 @@ public class Node implements Comparable<Node> {
     }
 
     public static class Edge {
-        Edge(int weight, Node node) {
-            this.weight = weight;
+        Edge(int difficulty, Node node) {
+            this.difficulty = difficulty;
             this.node = node;
         }
-        public int weight;
+        public int difficulty;
         public Node node;
     }
 
@@ -89,7 +89,7 @@ public class Node implements Comparable<Node> {
 
             for(Node.Edge edge : n.neighbors){
                 Node node = edge.node;
-                double totalWeight = n.timeTraveled + edge.weight;
+                double totalWeight = n.timeTraveled + edge.difficulty;
 
                 if(!toExpand.contains(node) && !expanded.contains(node)){
                     node.parent = n;
