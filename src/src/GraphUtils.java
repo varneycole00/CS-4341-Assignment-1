@@ -38,16 +38,16 @@ public class GraphUtils {
         String[][] fileArray = loadTerrain(fileName);
         graph = new Node[fileArray.length][fileArray[0].length];
         robot = new Robot(Direction.NORTH);
-        int y = 1;
+        int y = 0;
         for (String[] a : fileArray){
-            int x = 1;
+            int x = 0;
             for (String s : a){
                 if (s.equals("S") || s.equals("s"))
-                    graph[y-1][x-1] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
+                    graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
                 else if (s.equals("G") || s.equals("g"))
-                    graph[y-1][x-1] = new Node(Integer.MAX_VALUE, 1, x, y);
+                    graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y);
                 else
-                    graph[y-1][x-1] = new Node(Integer.MAX_VALUE, Integer.parseInt(s), x, y);
+                    graph[y][x] = new Node(Integer.MAX_VALUE, Integer.parseInt(s), x, y);
                 x++;
             }
             y++;
@@ -56,34 +56,34 @@ public class GraphUtils {
     }
 
     private static void findEdges(){
-        int y = 1;
+        int y = 0;
         Node left;
         Node right;
         Node up;
         Node down;
         for (Node[] a : graph){
-            int x = 1;
+            int x = 0;
             for (Node n : a){
                 try{
-                    left = graph[y-1][x-2];}
-                catch(ArrayIndexOutOfBoundsException e){
+                    left = graph[y][x-1];}
+                catch(Exception e){
                     left = null;
                 }
 
                 try{
-                    right = graph[y-1][x];}
+                    right = graph[y][x+1];}
                 catch(Exception e){
                     right = null;
                 }
 
                 try{
-                    up = graph[y-2][x-1];}
+                    up = graph[y-1][x];}
                 catch(Exception e){
                     up = null;
                 }
 
                 try{
-                    down = graph[y][x-1];}
+                    down = graph[y+1][x];}
                 catch(Exception e){
                     down = null;
                 }
