@@ -113,12 +113,16 @@ public class Node implements Comparable<Node> {
         // calculate estimate of horizontal movements only
         if(xStart > xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.WEST)
+                horizontalEstimate++;
             for(int i = xStart ; i >= xTarget ; i--) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
         }
         else if(xStart < xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.EAST)
+                horizontalEstimate++;
             for(int i = xStart ; i <= xTarget ; i++) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
@@ -126,12 +130,16 @@ public class Node implements Comparable<Node> {
         // calculate estimate of vertical movements only
         if(yStart > yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.NORTH)
+                verticalEstimate++;
             for(int i = yStart ; i >= yTarget ; i--) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
         }
         else if(yStart < yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
+            if(robotDirection != Direction.SOUTH)
+                verticalEstimate++;
             for(int i = yStart ; i <= yTarget ; i++) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
@@ -187,6 +195,9 @@ public class Node implements Comparable<Node> {
                     node.parent = n;
                     node.timeTraveled = totalWeight;
 
+                    if(edge.direction != n.robot.robotDirection) //adds to time for turning
+                        node.timeTraveled++;
+
                     node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
@@ -195,6 +206,10 @@ public class Node implements Comparable<Node> {
                         node.parent = n;
                         node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
                         node.timeTraveled = totalWeight;
+
+                        if(edge.direction != n.robot.robotDirection) //adds to time for turning
+                            node.timeTraveled++;
+
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
 
