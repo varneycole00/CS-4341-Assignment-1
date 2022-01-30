@@ -198,8 +198,12 @@ public class Node implements Comparable<Node> {
                     node.timeTraveled = totalWeight;
                     node.robot = new Robot(n.robot.robotDirection);
 
+
                     // Handling turns
                     handleTurns(node, edge);
+                    node.robot.robotDirection = n.robot.robotDirection;
+
+
                     // handling Bash
                     handleBash(node, edge);
 
@@ -209,11 +213,12 @@ public class Node implements Comparable<Node> {
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
-                        node.robot = new Robot(n.robot.robotDirection); // Will likely have to handle direction change somewhere!!
 
                         node.timeTraveled = totalWeight;
                         // adds to time for turning
                         handleTurns(node, edge);
+                        node.robot.robotDirection = n.robot.robotDirection;
+
                         // Handling bash
                         handleBash(node, edge);
 
@@ -235,10 +240,10 @@ public class Node implements Comparable<Node> {
     }
 
     public static void handleTurns(Node node, Edge edge) {
-        if(edge.direction != node.parent.robot.robotDirection) {
+        if(edge.direction != node.robot.robotDirection) {
             int turns = node.robot.calculateShortestTurns(edge.direction);
             node.timeTraveled += node.difficulty * .5 * turns;
-            node.turns += turns;
+            node.turns = turns;
             node.robot.robotDirection = edge.direction;
         }
     }
@@ -269,22 +274,23 @@ public class Node implements Comparable<Node> {
         if (n == null)
             return;
 
-        List<Integer> ids = new ArrayList<>();
+        List<Node> nodes = new ArrayList<Node>();
 
         while (n.parent != null) {
-            ids.add(n.difficulty);
+            nodes.add(n);
             n = n.parent;
-            System.out.println(n.difficulty);
-            if(n.robot.getBashPerformed())
-                System.out.println("bash");
-            if(n.turns > 0)
-                System.out.println("turned " + n.turns + " times");
         }
-        ids.add(n.difficulty);
-        Collections.reverse(ids);
+        nodes.add(n);
+        Collections.reverse(nodes);
 
-        for (int id : ids) {
-            System.out.print(id + " ");
+        for (Node node : nodes) {
+            System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
+            if(node.turns > 0) {
+                System.out.println("Turned " + node.turns + " times");
+            }
+            if(node.robot.getBashPerformed()) {
+                System.out.println("Bashed");
+            }
         }
 
         System.out.println("");
