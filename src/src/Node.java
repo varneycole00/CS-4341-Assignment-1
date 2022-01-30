@@ -30,16 +30,18 @@ public class Node implements Comparable<Node> {
     }
 
     public static class Edge {
-        Edge(int difficulty, Node node) {
+        Edge(int difficulty, Node node, Direction direction) {
             this.difficulty = difficulty;
             this.node = node;
+            this.direction = direction;
         }
         public int difficulty;
         public Node node;
+        public Direction direction;
     }
 
-    public void addBranch(int weight, Node node) {
-        Edge newEdge = new Edge(weight, node);
+    public void addBranch(int weight, Node node, Direction direction) {
+        Edge newEdge = new Edge(weight, node, direction);
         neighbors.add(newEdge);
     }
 
