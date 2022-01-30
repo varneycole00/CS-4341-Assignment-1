@@ -39,11 +39,7 @@ public class GameState {
     }
 
     public String generateOutputString(Node target) {
-
         Node n = target;
-
-        if (n == null)
-            return;
 
         List<Integer> ids = new ArrayList<>();
 
@@ -67,5 +63,7 @@ public class GameState {
 //        }
 //
 //        return ret;
+
+        return "";
     }
 }
