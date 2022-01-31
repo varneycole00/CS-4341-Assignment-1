@@ -42,12 +42,12 @@ public class GraphUtils {
         for (String[] a : fileArray){
             int x = 1;
             for (String s : a){
-                if (s == "s" || s == "S")
-                    graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
-                else if (s == "g" || s == "G")
-                    graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y);
+                if (s.equals("S") || s.equals("s"))
+                    graph[y-1][x-1] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
+                else if (s.equals("G") || s.equals("g"))
+                    graph[y-1][x-1] = new Node(Integer.MAX_VALUE, 1, x, y);
                 else
-                    graph[y][x] = new Node(Integer.MAX_VALUE, Integer.valueOf(s), x, y);
+                    graph[y-1][x-1] = new Node(Integer.MAX_VALUE, Integer.parseInt(s), x, y);
                 x++;
             }
             y++;
@@ -66,7 +66,7 @@ public class GraphUtils {
             for (Node n : a){
                 try{
                     left = graph[y-1][x-2];}
-                catch(Exception e){
+                catch(ArrayIndexOutOfBoundsException e){
                     left = null;
                 }
 

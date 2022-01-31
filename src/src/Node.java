@@ -58,8 +58,8 @@ public class Node implements Comparable<Node> {
         public Direction direction;
     }
 
-    public void addBranch(int weight, Node node, Direction direction) {
-        Edge newEdge = new Edge(weight, node, direction);
+    public void addBranch(int difficulty, Node node, Direction direction) {
+        Edge newEdge = new Edge(difficulty, node, direction);
         neighbors.add(newEdge);
     }
 
@@ -170,7 +170,7 @@ public class Node implements Comparable<Node> {
         PriorityQueue<Node> expanded = new PriorityQueue<>();
         PriorityQueue<Node> toExpand = new PriorityQueue<>();
 
-        start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, "Default");
+        start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, mode);
         toExpand.add(start);
 
         while(!toExpand.isEmpty()){
@@ -186,13 +186,14 @@ public class Node implements Comparable<Node> {
                 if(!toExpand.contains(node) && !expanded.contains(node)){
                     node.parent = n;
                     node.timeTraveled = totalWeight;
-                    node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target,"Default");
+                    node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
                         node.timeTraveled = totalWeight;
-                        node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, "Default");
+                        node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
+
 
                         if(expanded.contains(node)){
                             expanded.remove(node);
