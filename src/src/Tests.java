@@ -16,12 +16,12 @@ public class Tests {
                 Node n = graph[i][j];
                 if (wasUsedInPath(n.id, goal)) {
                     if(n.parent != null) {
-                        if (n.turned2Prev == 1) {
+                        if (n.robot.robotDirection != n.parent.robot.robotDirection) {
                             System.out.print("T");
                         } else {
                             System.out.print("_");
                         }
-                        if (n.robot.getBashed2Prev()) {
+                        if (n.bash) {
                             System.out.print("B");
                         } else {
                             System.out.print("_");

@@ -63,6 +63,7 @@ public class GraphUtils {
         Node right;
         Node up;
         Node down;
+        Node bash;
         for (Node[] a : graph){
             int x = 0;
             for (Node n : a){
@@ -90,14 +91,18 @@ public class GraphUtils {
                     down = null;
                 }
 
+
+
                 if (left != null)
-                    n.addBranch(left.difficulty, left, Direction.WEST);
+                    n.addBranch(left.difficulty, left, Direction.WEST,false);
                 if (right != null)
-                    n.addBranch(right.difficulty, right, Direction.EAST);
+                    n.addBranch(right.difficulty, right, Direction.EAST,false);
                 if (up != null)
-                    n.addBranch(up.difficulty, up, Direction.NORTH);
+                    n.addBranch(up.difficulty, up, Direction.NORTH,false);
                 if (down != null)
-                    n.addBranch(down.difficulty, down, Direction.SOUTH);
+                    n.addBranch(down.difficulty, down, Direction.SOUTH,false);
+
+                addBashEdges(graph, n, x, y);
 
                 x++;
             }
@@ -105,6 +110,50 @@ public class GraphUtils {
             y++;
         }
     }
+
+    public static void addBashEdges(Node[][] graph, Node n, int x, int y) {
+        Node bashLeft;
+        Node bashRight;
+        Node bashUp;
+        Node bashDown;
+
+        try{
+            bashLeft = graph[y][x-2];
+        } catch (Exception e) {
+            bashLeft = null;
+        }
+        try{
+            bashRight = graph[y][x+2];
+        } catch (Exception e) {
+            bashRight = null;
+        }
+        try{
+            bashUp = graph[y-2][x];
+        } catch (Exception e) {
+            bashUp = null;
+        }
+        try{
+            bashDown = graph[y+2][x];
+        } catch (Exception e) {
+            bashDown = null;
+        }
+
+        if (bashLeft != null) {
+            n.addBranch(bashLeft.difficulty + 3, bashLeft, Direction.WEST, true);
+        }
+        if (bashRight != null) {
+            n.addBranch(bashRight.difficulty + 3, bashRight, Direction.EAST, true);
+        }
+        if (bashUp != null) {
+            n.addBranch(bashUp.difficulty + 3, bashUp, Direction.NORTH, true);
+        }
+        if (bashDown != null) {
+            n.addBranch(bashDown.difficulty + 3, bashDown, Direction.SOUTH, true);
+        }
+
+
+    }
+
 
     // TODO: Test this bish
     public static Direction calculateDirection(int xStart, int yStart, int xEnd, int yEnd) throws Exception {

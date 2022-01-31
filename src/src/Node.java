@@ -9,6 +9,8 @@ public class Node implements Comparable<Node> {
     private static int idCounter = 0;
     public int id;
     public int difficulty;
+    public boolean bash = false;
+    public boolean turnedPreviously = false;
 
     public Node parent = null;
     public List<Edge> neighbors;
@@ -50,18 +52,20 @@ public class Node implements Comparable<Node> {
     }
 
     public static class Edge {
-        Edge(int difficulty, Node node, Direction direction) {
+        Edge(int difficulty, Node node, Direction direction, boolean bash) {
             this.difficulty = difficulty;
             this.node = node;
             this.direction = direction;
+            this.bash = bash;
         }
         public int difficulty;
         public Node node;
         public Direction direction;
+        public boolean bash;
     }
 
-    public void addBranch(int difficulty, Node node, Direction direction) {
-        Edge newEdge = new Edge(difficulty, node, direction);
+    public void addBranch(int difficulty, Node node, Direction direction, boolean bash) {
+        Edge newEdge = new Edge(difficulty, node, direction, bash);
         neighbors.add(newEdge);
     }
 
@@ -191,19 +195,25 @@ public class Node implements Comparable<Node> {
             for(Node.Edge edge : n.neighbors) {
                 Node node = edge.node;
                 double totalWeight = n.timeTraveled + edge.difficulty;
+                boolean bash = edge.bash;
 
                 if(!toExpand.contains(node) && !expanded.contains(node)){
                     node.parent = n;
                     node.timeTraveled = totalWeight;
-                    node.robot = new Robot(n.robot.robotDirection);
+                    node.robot = new Robot(edge.direction);
+                    node.bash = bash;
 
+                    if(n.robot.robotDirection != edge.direction) {
+                        node.timeTraveled += node.difficulty * .5;
+                        n.turnedPreviously = true;
+                    }
 
                     // Handling turns
-                    handleTurns(node, edge);
+                    // handleTurns(node, edge);
 
 
                     // handling Bash
-                    handleBash(node, edge);
+                    // handleBash(node, edge);
 
                      // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
@@ -211,14 +221,19 @@ public class Node implements Comparable<Node> {
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
-                        node.robot.setBashed2Prev(false);
+                        node.robot.robotDirection = edge.direction;
                         node.timeTraveled = totalWeight;
+                        node.bash = bash;
+                        if(node.parent.robot.robotDirection != edge.direction) {
+                            node.timeTraveled += node.difficulty * .5;
+                            n.turnedPreviously = true;
+                        }
 
                         // adds to time for turning
-                        handleTurns(node, edge);
+                        // handleTurns(node, edge);
 
                         // Handling bash
-                        handleBash(node, edge);
+                        //handleBash(node, edge);
 
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
@@ -285,20 +300,20 @@ public class Node implements Comparable<Node> {
 
             if(node.parent == null) {
                 System.out.println("");
-                printOut(node);
+                System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
                 return;
             }
-            printOut(node.parent);
+            printOut(node);
         }
 
     }
 public static void printOut(Node node) {
     System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-    if (node.robot.getBashed2Prev()) {
-        System.out.println("\tBashed");
+    if (node.bash) {
+        System.out.println("\t Robot Bashed");
     }
-    if (node.turned2Prev > 0) {
-        System.out.println("\tTurned " + node.turned2Prev + " times");
+    if (node.robot.robotDirection != node.parent.robot.robotDirection) {
+        System.out.println("\t Robot Turned ");
     }
 }
 
