@@ -189,7 +189,7 @@ public class Node implements Comparable<Node> {
                 return n;
             }
 
-            for(Node.Edge edge : n.neighbors){
+            for(Node.Edge edge : n.neighbors) {
                 Node node = edge.node;
                 double totalWeight = n.timeTraveled + edge.difficulty;
 
@@ -213,7 +213,7 @@ public class Node implements Comparable<Node> {
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
-
+                        node.robot.setBashedPrev(false);
                         node.timeTraveled = totalWeight;
                         // adds to time for turning
                         handleTurns(node, edge);
@@ -241,23 +241,25 @@ public class Node implements Comparable<Node> {
 
     public static void handleTurns(Node node, Edge edge) {
         if(edge.direction != node.robot.robotDirection) {
-            int turns = node.robot.calculateShortestTurns(edge.direction);
-            node.timeTraveled += node.difficulty * .5 * turns;
-            node.turns = turns;
+//            int turns = node.parent.robot.calculateShortestTurns(edge.direction);
+            node.timeTraveled += node.parent.difficulty * .5;
+            node.parent.turns = 1;
             node.robot.robotDirection = edge.direction;
         }
     }
-    public static void handleBash(Node node, Edge edge) {
+    public static boolean handleBash(Node node, Edge edge) {
         try {
             if (node.robot.robotDirection == node.parent.robot.robotDirection &&
                 node.parent.robot.robotDirection == node.parent.parent.robot.robotDirection &&
                 node.parent.difficulty > 3) {
                 node.timeTraveled -= (node.parent.difficulty - 3);
-                node.parent.robot.setBashPerformed(true);
+                node.robot.setBashedPrev(true);
+                return true;
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+//            throw new RuntimeException(e);
         }
-
+        return false;
     }
 
     // TODO: configure to meet assignment conditions
@@ -286,10 +288,10 @@ public class Node implements Comparable<Node> {
         for (Node node : nodes) {
             System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
             if(node.turns > 0) {
-                System.out.println("Turned " + node.turns + " times");
+                System.out.println("\tTurned " + node.turns + " times");
             }
-            if(node.robot.getBashPerformed()) {
-                System.out.println("Bashed");
+            if(node.robot.getBashedPrev()) {
+                System.out.println("\tBashed");
             }
         }
 
