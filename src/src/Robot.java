@@ -1,5 +1,5 @@
 public class Robot {
-    private boolean bashedPrev = false;
+    private boolean bashed2Prev = false;
     Direction robotDirection;
 
     public Robot(Direction robotDirection) {
@@ -9,18 +9,18 @@ public class Robot {
     /**
      * Function used to update the value of the bashPerformed variable. When a bash move is performed,
      * the robot's next move must be a forward move.
-     * @param bashedPrev a boolean representing the new value of the bashPerformed variable
+     * @param bashed2Prev a boolean representing the new value of the bashPerformed variable
      */
-    public void setBashedPrev(boolean bashedPrev) {
-        this.bashedPrev = bashedPrev;
+    public void setBashed2Prev(boolean bashed2Prev) {
+        this.bashed2Prev = bashed2Prev;
     }
 
     /**
      * Getter for bashPerformed.
      * @return a boolean value representing the state of the bashPerformed variable
      */
-    public boolean getBashedPrev() {
-        return bashedPrev;
+    public boolean getBashed2Prev() {
+        return bashed2Prev;
     }
 
 //    public int calculateShortestTurns(Direction newDirection) {

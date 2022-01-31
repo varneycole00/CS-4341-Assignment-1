@@ -15,15 +15,20 @@ public class Tests {
             for( int j = 0 ; j < 11; j++) {
                 Node n = graph[i][j];
                 if (wasUsedInPath(n.id, goal)) {
-                    if (n.turns == 1) {
-                        System.out.print("T");
-                    } else {
-                        System.out.print("_");
+                    if(n.parent != null) {
+                        if (n.turned2Prev == 1) {
+                            System.out.print("T");
+                        } else {
+                            System.out.print("_");
+                        }
+                        if (n.robot.getBashed2Prev()) {
+                            System.out.print("B");
+                        } else {
+                            System.out.print("_");
+                        }
                     }
-                    if (n.robot.getBashedPrev()) {
-                        System.out.print("C");
-                    } else {
-                        System.out.print("_");
+                    else {
+                        System.out.print("__");
                     }
                     System.out.print("* ");
                 } else {

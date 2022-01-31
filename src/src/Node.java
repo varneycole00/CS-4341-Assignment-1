@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -21,7 +20,7 @@ public class Node implements Comparable<Node> {
     public int xPos;
     public int yPos;
     Robot robot;
-    public int turns;
+    public int turned2Prev;
 
     Node(double h, int difficulty, int xPos, int yPos, Robot robot) {
         this.timeRemainingEstimate = h;
@@ -31,7 +30,7 @@ public class Node implements Comparable<Node> {
         this.xPos = xPos;
         this.yPos = yPos;
         this.robot = robot;
-        this.turns = 0;
+        this.turned2Prev = 0;
     }
 
     Node(double h, int difficulty, int xPos, int yPos) {
@@ -41,7 +40,7 @@ public class Node implements Comparable<Node> {
         this.difficulty = difficulty;
         this.xPos = xPos;
         this.yPos = yPos;
-        this.turns = 0;
+        this.turned2Prev = 0;
     }
 
 
@@ -201,7 +200,6 @@ public class Node implements Comparable<Node> {
 
                     // Handling turns
                     handleTurns(node, edge);
-                    node.robot.robotDirection = n.robot.robotDirection;
 
 
                     // handling Bash
@@ -213,11 +211,11 @@ public class Node implements Comparable<Node> {
                 } else {
                     if(totalWeight < node.timeTraveled){
                         node.parent = n;
-                        node.robot.setBashedPrev(false);
+                        node.robot.setBashed2Prev(false);
                         node.timeTraveled = totalWeight;
+
                         // adds to time for turning
                         handleTurns(node, edge);
-                        node.robot.robotDirection = n.robot.robotDirection;
 
                         // Handling bash
                         handleBash(node, edge);
@@ -240,26 +238,24 @@ public class Node implements Comparable<Node> {
     }
 
     public static void handleTurns(Node node, Edge edge) {
-        if(edge.direction != node.robot.robotDirection) {
+        if(edge.direction != node.parent.robot.robotDirection) {
 //            int turns = node.parent.robot.calculateShortestTurns(edge.direction);
             node.timeTraveled += node.parent.difficulty * .5;
-            node.parent.turns = 1;
+            node.turned2Prev = 1;
             node.robot.robotDirection = edge.direction;
         }
     }
-    public static boolean handleBash(Node node, Edge edge) {
+    public static void handleBash(Node node, Edge edge) {
         try {
             if (node.robot.robotDirection == node.parent.robot.robotDirection &&
                 node.parent.robot.robotDirection == node.parent.parent.robot.robotDirection &&
                 node.parent.difficulty > 3) {
                 node.timeTraveled -= (node.parent.difficulty - 3);
-                node.robot.setBashedPrev(true);
-                return true;
+                node.parent.robot.setBashed2Prev(true);
             }
         } catch (Exception e) {
 //            throw new RuntimeException(e);
         }
-        return false;
     }
 
     // TODO: configure to meet assignment conditions
@@ -283,21 +279,27 @@ public class Node implements Comparable<Node> {
             n = n.parent;
         }
         nodes.add(n);
-        Collections.reverse(nodes);
+        //Collections.reverse(nodes);
 
         for (Node node : nodes) {
-            System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-            if(node.turns > 0) {
-                System.out.println("\tTurned " + node.turns + " times");
+
+            if(node.parent == null) {
+                System.out.println("");
+                printOut(node);
+                return;
             }
-            if(node.robot.getBashedPrev()) {
-                System.out.println("\tBashed");
-            }
+            printOut(node.parent);
         }
 
-        System.out.println("");
-
     }
-
+public static void printOut(Node node) {
+    System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
+    if (node.robot.getBashed2Prev()) {
+        System.out.println("\tBashed");
+    }
+    if (node.turned2Prev > 0) {
+        System.out.println("\tTurned " + node.turned2Prev + " times");
+    }
+}
 
 }
