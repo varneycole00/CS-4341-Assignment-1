@@ -8,8 +8,6 @@ public class Node implements Comparable<Node> {
     public static Node[][] graph = GraphUtils.getGraph();
 
     private static int idCounter = 0;
-    private static boolean visited = false;
-    private static List<String> robotActions = new ArrayList<>();
     public int id;
     public int difficulty;
     public boolean bash = false;
@@ -273,10 +271,8 @@ public class Node implements Comparable<Node> {
         nodes.add(0, n);
 
         List<String> actions = new ArrayList<String>();
-        System.out.println("\n\n\n");
-        System.out.println("A* Score: " + (100 - target.timeTraveled));
+        System.out.println("Score: \n" + (100 - target.timeTraveled));
         System.out.println();
-        System.out.println("Starting at the start node, the robot performed these moves: ");
         for (Node node : nodes) {
 
             actions = Robot.calculateTurn(node, actions);
@@ -293,8 +289,13 @@ public class Node implements Comparable<Node> {
             }
         }
         actions.add("->\tReached goal!!");
+        System.out.println("Number of actions performed:");
         System.out.println(GameState.getNumActions());
+        System.out.println();
+        System.out.println("Number of nodes expanded:");
         System.out.println(GameState.getNumNodesExpanded());
+        System.out.println();
+        System.out.println("Starting at the start node, the robot performed these moves: ");
         for (String s : actions) {
             System.out.println(s);
         }
