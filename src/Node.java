@@ -255,22 +255,37 @@ public class Node implements Comparable<Node> {
             n = n.parent;
         }
         nodes.add(n);
-        //Collections.reverse(nodes);
 
+        List<String> actions = new ArrayList<String>();
+        Node goalNode = nodes.get(0);
+        System.out.println("\n\n\n");
+        System.out.println("A* Score: " + goalNode.timeTraveled);
+        System.out.println();
+        System.out.println("Starting at the start node the robot performed these moves: ");
         for (Node node : nodes) {
 
             if(node.parent == null) {
+                actions.add("->\tReached goal!!");
                 //System.out.println("");
                 //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-                System.out.println(GameState.getInstance().getNumActions());
-                System.out.println(GameState.getInstance().getNumNodesExpanded());
-                Collections.reverse(robotActions);
-                for (String s: robotActions) {
+//                System.out.println(GameState.getInstance().getNumActions());
+//                System.out.println(GameState.getInstance().getNumNodesExpanded());
+//                Collections.reverse(robotActions);
+                for (String s: actions) {
                     System.out.println(s);
                 }
                 return;
             }
-            printOut(node);
+
+            if(node.parent.bash) {
+                actions.add("->\tBashed and move forward");
+            }
+            if(node.parent.robot.robotDirection != node.robot.robotDirection) {
+                actions.add(Robot.calculateTurn(node));
+            }else if(!node.parent.bash) {
+                actions.add("->\tMoved forward");
+            }
+
         }
 
     }
@@ -279,32 +294,25 @@ public static void printOut(Node node) {
         System.out.println("A* Score: " + node.timeTraveled);
         visited = true;
     }
-    //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-    if (node.bash) {
-        GameState.getInstance().incrementNumActions();
-        //System.out.println("\t Robot Bashed");
-        robotActions.add("bash");
-    }
 
-    if (node.robot.robotDirection != node.parent.robot.robotDirection) {
-        if (node.parent.robot.robotDirection == Direction.NORTH && node.robot.robotDirection == Direction.WEST ||
-                node.parent.robot.robotDirection == Direction.WEST && node.robot.robotDirection == Direction.SOUTH ||
-                node.parent.robot.robotDirection == Direction.SOUTH && node.robot.robotDirection == Direction.EAST ||
-                node.parent.robot.robotDirection == Direction.EAST && node.robot.robotDirection == Direction.NORTH) {
-            GameState.getInstance().incrementNumActions();
-            robotActions.add("left");
-        } else if (node.parent.robot.robotDirection == Direction.NORTH && node.robot.robotDirection == Direction.EAST ||
-                node.parent.robot.robotDirection == Direction.WEST && node.robot.robotDirection == Direction.NORTH ||
-                node.parent.robot.robotDirection == Direction.SOUTH && node.robot.robotDirection == Direction.WEST ||
-                node.parent.robot.robotDirection == Direction.EAST && node.robot.robotDirection == Direction.SOUTH) {
-            GameState.getInstance().incrementNumActions();
-            robotActions.add("right");
-        }
-         //System.out.println("\t Robot Turned ");
-    } else {
-        GameState.getInstance().incrementNumActions();
-        robotActions.add("forward");
-    }
+
+
+
+
+
+//    //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
+//    if (node.bash) {
+//        GameState.getInstance().incrementNumActions();
+//        //System.out.println("\t Robot Bashed");
+//        robotActions.add("bash");
+//    }
+//
+//
+//         //System.out.println("\t Robot Turned ");
+//    } else {
+//        GameState.getInstance().incrementNumActions();
+//        robotActions.add("forward");
+//    }
 }
 
 }
