@@ -102,8 +102,7 @@ public class Node implements Comparable<Node> {
     }
 
     public double calculateProvided(Node target, int mode) throws Exception {
-        int horizontalEstimate = 0;
-        int verticalEstimate = 0;
+
 
         // acquire desired x and y positioning
         int xTarget = target.xPos;
@@ -118,6 +117,9 @@ public class Node implements Comparable<Node> {
         Direction robotDirection = startDirection;
 
         // calculate estimate of horizontal movements only
+
+        int horizontalEstimate = 0;
+        int verticalEstimate = 0;
         if(xStart > xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             if(robotDirection != Direction.WEST)
@@ -151,25 +153,19 @@ public class Node implements Comparable<Node> {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
         }
+
         // return minimum of the two
         switch(mode) {
             case 2:
-                if(horizontalEstimate <= verticalEstimate) {
-                    return horizontalEstimate;
-                } else {
-                    return verticalEstimate;
-                }
+                return Math.min(Math.abs(yStart-yTarget),Math.abs(xStart-xTarget));
             case 3:
-                if(horizontalEstimate >= verticalEstimate) {
-                    return horizontalEstimate;
-                }
-                else {
-                    return verticalEstimate;
-                }
+                return Math.max(Math.abs(yStart-yTarget),Math.abs(xStart-xTarget));
             case 4:
-                return verticalEstimate + horizontalEstimate;
+                return Math.abs(yStart-yTarget) + Math.abs(xStart-xTarget);
             case 5:
-                return Math.sqrt(((verticalEstimate^2) + (horizontalEstimate^2)));
+                return Math.sqrt(verticalEstimate^2 + horizontalEstimate^2);
+            case 6:
+                return 3 * Math.sqrt(verticalEstimate^2 + horizontalEstimate^2);
             default:
                 return (int)this.timeRemainingEstimate;
         }
@@ -210,7 +206,7 @@ public class Node implements Comparable<Node> {
                     node.bash = bash;
 
                     if(n.robot.robotDirection != edge.direction) {
-                        node.timeTraveled += node.difficulty * .5;
+                        node.timeTraveled += node.parent.difficulty * .5;
                         n.turnedPreviously = true;
                     }
 
