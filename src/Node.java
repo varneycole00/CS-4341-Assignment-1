@@ -294,7 +294,7 @@ public class Node implements Comparable<Node> {
     }
 public static void printOut(Node node) {
     if (!visited) {
-        System.out.println("A* Score " + node.timeTraveled);
+        System.out.println("A* Score: " + node.timeTraveled);
         visited = true;
     }
     //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
