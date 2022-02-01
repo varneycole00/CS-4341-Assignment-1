@@ -205,17 +205,10 @@ public class Node implements Comparable<Node> {
                     node.robot = new Robot(edge.direction);
                     node.bash = bash;
 
-                    if(n.robot.robotDirection != edge.direction) {
+                    if(node.parent.robot.robotDirection != edge.direction) {
                         node.timeTraveled += node.parent.difficulty * .5;
                         n.turnedPreviously = true;
                     }
-
-                    // Handling turns
-                    // handleTurns(node, edge);
-
-
-                    // handling Bash
-                    // handleBash(node, edge);
 
                      // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
@@ -231,14 +224,7 @@ public class Node implements Comparable<Node> {
                             n.turnedPreviously = true;
                         }
 
-                        // adds to time for turning
-                        // handleTurns(node, edge);
-
-                        // Handling bash
-                        //handleBash(node, edge);
-
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
-
 
                         if(expanded.contains(node)){
                             expanded.remove(node);
