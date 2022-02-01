@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -7,6 +8,8 @@ public class Node implements Comparable<Node> {
     public static Node[][] graph = GraphUtils.getGraph();
 
     private static int idCounter = 0;
+    private static boolean visited = false;
+    private static List<String> robotActions = new ArrayList<>();
     public int id;
     public int difficulty;
     public boolean bash = false;
@@ -189,6 +192,8 @@ public class Node implements Comparable<Node> {
 
         while(!toExpand.isEmpty()){
             Node n = toExpand.peek();
+            GameState.getInstance().incrementNodesExpanded();
+
             if(n == target){
                 return n;
             }
@@ -273,8 +278,14 @@ public class Node implements Comparable<Node> {
         for (Node node : nodes) {
 
             if(node.parent == null) {
-                System.out.println("");
-                System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
+                //System.out.println("");
+                //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
+                System.out.println(GameState.getInstance().getNumActions());
+                System.out.println(GameState.getInstance().getNumNodesExpanded());
+                Collections.reverse(robotActions);
+                for (String s: robotActions) {
+                    System.out.println(s);
+                }
                 return;
             }
             printOut(node);
@@ -282,12 +293,35 @@ public class Node implements Comparable<Node> {
 
     }
 public static void printOut(Node node) {
-    System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-    if (node.bash) {
-        System.out.println("\t Robot Bashed");
+    if (!visited) {
+        System.out.println("A* Score " + node.timeTraveled);
+        visited = true;
     }
+    //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
+    if (node.bash) {
+        GameState.getInstance().incrementNumActions();
+        //System.out.println("\t Robot Bashed");
+        robotActions.add("bash");
+    }
+
     if (node.robot.robotDirection != node.parent.robot.robotDirection) {
-        System.out.println("\t Robot Turned ");
+        if (node.parent.robot.robotDirection == Direction.NORTH && node.robot.robotDirection == Direction.WEST ||
+                node.parent.robot.robotDirection == Direction.WEST && node.robot.robotDirection == Direction.SOUTH ||
+                node.parent.robot.robotDirection == Direction.SOUTH && node.robot.robotDirection == Direction.EAST ||
+                node.parent.robot.robotDirection == Direction.EAST && node.robot.robotDirection == Direction.NORTH) {
+            GameState.getInstance().incrementNumActions();
+            robotActions.add("left");
+        } else if (node.parent.robot.robotDirection == Direction.NORTH && node.robot.robotDirection == Direction.EAST ||
+                node.parent.robot.robotDirection == Direction.WEST && node.robot.robotDirection == Direction.NORTH ||
+                node.parent.robot.robotDirection == Direction.SOUTH && node.robot.robotDirection == Direction.WEST ||
+                node.parent.robot.robotDirection == Direction.EAST && node.robot.robotDirection == Direction.SOUTH) {
+            GameState.getInstance().incrementNumActions();
+            robotActions.add("right");
+        }
+         //System.out.println("\t Robot Turned ");
+    } else {
+        GameState.getInstance().incrementNumActions();
+        robotActions.add("forward");
     }
 }
 

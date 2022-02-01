@@ -1,15 +1,13 @@
 public class Tests {
     public static void main(String[] args) throws Exception {
+        GameState.setInstance();
         Node[][] graph;
-        GraphUtils.makeGraph("src/src/board1.txt", 0);
+        GraphUtils.makeGraph("src/board1.txt", 0);
         graph = GraphUtils.getGraph();
 
 
-
-
-        GameState.setInstance();
         Node goal = Node.aStar(graph[4][2], graph[0][10], 0);
-        Node.printPath(goal);
+        //Node.printPath(goal);
 
         for(int i = 0 ; i < 5; i ++ ) {
             for( int j = 0 ; j < 11; j++) {

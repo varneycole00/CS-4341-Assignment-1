@@ -6,7 +6,7 @@ public class GameState {
     private static GameState instance = null;
     private int score = 0;
     private int numActions = 0;
-    private int numNodeExpanded = 0;
+    private int numNodesExpanded = 0;
     private List<String> outputText = new ArrayList<String>();
 
     /**
@@ -33,6 +33,22 @@ public class GameState {
      */
     public static void setInstance() {
         instance = null;
+    }
+
+    public void incrementNumActions() {
+        numActions++;
+    }
+
+    public void incrementNodesExpanded() {
+        numNodesExpanded++;
+    }
+
+    public int getNumActions() {
+        return numActions;
+    }
+
+    public int getNumNodesExpanded() {
+        return numNodesExpanded;
     }
 
     public void buildOutputString(MovementType movementType) {
