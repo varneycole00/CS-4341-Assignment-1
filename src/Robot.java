@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Robot {
     private boolean bashed2Prev = false;
     Direction robotDirection;
@@ -37,23 +39,24 @@ public class Robot {
 //            return 2;
 //        }
 //    }
-    public static String calculateTurn(Node node) {
+    public static void calculateTurn(Node node, List<String> actions) {
         if (node.robot.robotDirection != node.parent.robot.robotDirection) {
             if (node.parent.robot.robotDirection == Direction.NORTH && node.robot.robotDirection == Direction.WEST ||
                     node.parent.robot.robotDirection == Direction.WEST && node.robot.robotDirection == Direction.SOUTH ||
                     node.parent.robot.robotDirection == Direction.SOUTH && node.robot.robotDirection == Direction.EAST ||
                     node.parent.robot.robotDirection == Direction.EAST && node.robot.robotDirection == Direction.NORTH) {
                 GameState.getInstance().incrementNumActions();
-                return "->\tTurned Right";
+               actions.add("->\tTurned Right");
+
             } else if (node.parent.robot.robotDirection == Direction.NORTH && node.robot.robotDirection == Direction.EAST ||
                     node.parent.robot.robotDirection == Direction.WEST && node.robot.robotDirection == Direction.NORTH ||
                     node.parent.robot.robotDirection == Direction.SOUTH && node.robot.robotDirection == Direction.WEST ||
                     node.parent.robot.robotDirection == Direction.EAST && node.robot.robotDirection == Direction.SOUTH) {
                 GameState.getInstance().incrementNumActions();
-                return "->\tTurned Left";
+                actions.add("->\tTurned Left");
             }
 
         }
-        throw new RuntimeException();
+
     }
 }

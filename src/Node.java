@@ -61,6 +61,7 @@ public class Node implements Comparable<Node> {
             this.direction = direction;
             this.bash = bash;
         }
+
         public int difficulty;
         public Node node;
         public Direction direction;
@@ -75,7 +76,7 @@ public class Node implements Comparable<Node> {
     /* Todo: adjust this method to take in a flag and calculate heuristics differently
         depending on the A* mode) */
     public double calculateHeuristic(Node target, int mode) throws Exception {
-        switch(mode) {
+        switch (mode) {
 
             case 1:
                 // Mode 'zero' where always zero
@@ -91,10 +92,10 @@ public class Node implements Comparable<Node> {
                 return calculateProvided(target, 4);
             case 5:
                 // Hypotenuse calculation
-                return calculateProvided(target,5);
+                return calculateProvided(target, 5);
             case 6:
                 // Mode: 'TBA' that is non-admissible by multiplying 'sum' by 3
-                return 3 * calculateProvided(target,5);
+                return 3 * calculateProvided(target, 5);
             default:
                 return this.timeRemainingEstimate;
 
@@ -120,60 +121,59 @@ public class Node implements Comparable<Node> {
 
         int horizontalEstimate = 0;
         int verticalEstimate = 0;
-        if(xStart > xTarget) {
+        if (xStart > xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
-            if(robotDirection != Direction.WEST)
+            if (robotDirection != Direction.WEST)
                 horizontalEstimate++;
-            for(int i = xStart ; i >= xTarget ; i--) {
+            for (int i = xStart; i >= xTarget; i--) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
-        }
-        else if(xStart < xTarget) {
+        } else if (xStart < xTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
-            if(robotDirection != Direction.EAST)
+            if (robotDirection != Direction.EAST)
                 horizontalEstimate++;
-            for(int i = xStart ; i <= xTarget ; i++) {
+            for (int i = xStart; i <= xTarget; i++) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
         }
         // calculate estimate of vertical movements only
-        if(yStart > yTarget) {
+        if (yStart > yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
-            if(robotDirection != Direction.NORTH)
+            if (robotDirection != Direction.NORTH)
                 verticalEstimate++;
-            for(int i = yStart ; i >= yTarget ; i--) {
+            for (int i = yStart; i >= yTarget; i--) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
-        }
-        else if(yStart < yTarget) {
+        } else if (yStart < yTarget) {
             // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
-            if(robotDirection != Direction.SOUTH)
+            if (robotDirection != Direction.SOUTH)
                 verticalEstimate++;
-            for(int i = yStart ; i <= yTarget ; i++) {
+            for (int i = yStart; i <= yTarget; i++) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
         }
 
         // return minimum of the two
-        switch(mode) {
+        switch (mode) {
             case 2:
-                return Math.min(Math.abs(yStart-yTarget),Math.abs(xStart-xTarget));
+                return Math.min(Math.abs(yStart - yTarget), Math.abs(xStart - xTarget));
             case 3:
-                return Math.max(Math.abs(yStart-yTarget),Math.abs(xStart-xTarget));
+                return Math.max(Math.abs(yStart - yTarget), Math.abs(xStart - xTarget));
             case 4:
-                return Math.abs(yStart-yTarget) + Math.abs(xStart-xTarget);
+                return Math.abs(yStart - yTarget) + Math.abs(xStart - xTarget);
             case 5:
-                return Math.sqrt(verticalEstimate^2 + horizontalEstimate^2);
+                return Math.sqrt(verticalEstimate ^ 2 + horizontalEstimate ^ 2);
             case 6:
-                return 3 * Math.sqrt(verticalEstimate^2 + horizontalEstimate^2);
+                return 3 * Math.sqrt(verticalEstimate ^ 2 + horizontalEstimate ^ 2);
             default:
-                return (int)this.timeRemainingEstimate;
+                return (int) this.timeRemainingEstimate;
         }
     }
 
     /**
      * aStar takes in a start node and an end node and uses the aStar algorithm to
      * determine the quickest path
+     *
      * @param start
      * @param target
      * @return
@@ -186,47 +186,47 @@ public class Node implements Comparable<Node> {
         start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, mode);
         toExpand.add(start);
 
-        while(!toExpand.isEmpty()){
+        while (!toExpand.isEmpty()) {
             Node n = toExpand.peek();
             GameState.getInstance().incrementNodesExpanded();
 
-            if(n == target){
+            if (n == target) {
                 return n;
             }
 
-            for(Node.Edge edge : n.neighbors) {
+            for (Node.Edge edge : n.neighbors) {
                 Node node = edge.node;
                 double totalWeight = n.timeTraveled + edge.difficulty;
                 boolean bash = edge.bash;
 
-                if(!toExpand.contains(node) && !expanded.contains(node)){
+                if (!toExpand.contains(node) && !expanded.contains(node)) {
                     node.parent = n;
                     node.timeTraveled = totalWeight;
                     node.robot = new Robot(edge.direction);
                     node.bash = bash;
 
-                    if(node.parent.robot.robotDirection != edge.direction) {
+                    if (node.parent.robot.robotDirection != edge.direction) {
                         node.timeTraveled += node.parent.difficulty * .5;
                         n.turnedPreviously = true;
                     }
 
-                     // Will likely have to handle direction change somewhere!!
+                    // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
                 } else {
-                    if(totalWeight < node.timeTraveled){
+                    if (totalWeight < node.timeTraveled) {
                         node.parent = n;
                         node.robot.robotDirection = edge.direction;
                         node.timeTraveled = totalWeight;
                         node.bash = bash;
-                        if(node.parent.robot.robotDirection != edge.direction) {
+                        if (node.parent.robot.robotDirection != edge.direction) {
                             node.timeTraveled += node.parent.difficulty * .5;
                             n.turnedPreviously = true;
                         }
 
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
-                        if(expanded.contains(node)){
+                        if (expanded.contains(node)) {
                             expanded.remove(node);
                             toExpand.add(node);
                         }
@@ -241,7 +241,7 @@ public class Node implements Comparable<Node> {
     }
 
     // TODO: configure to meet assignment conditions
-    public static void printPath(Node target){
+    public static void printPath(Node target) {
 
         Node n = target;
 
@@ -262,42 +262,39 @@ public class Node implements Comparable<Node> {
         System.out.println("A* Score: " + goalNode.timeTraveled);
         System.out.println();
         System.out.println("Starting at the start node the robot performed these moves: ");
+        int counter = 1;
         for (Node node : nodes) {
 
-            if(node.parent == null) {
+            if (node.parent == null) {
                 actions.add("->\tReached goal!!");
                 //System.out.println("");
                 //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
 //                System.out.println(GameState.getInstance().getNumActions());
 //                System.out.println(GameState.getInstance().getNumNodesExpanded());
-//                Collections.reverse(robotActions);
-                for (String s: actions) {
+                for (String s : actions) {
                     System.out.println(s);
                 }
                 return;
             }
 
-            if(node.parent.bash) {
-                actions.add("->\tBashed and move forward");
-            }
-            if(node.parent.robot.robotDirection != node.robot.robotDirection) {
-                actions.add(Robot.calculateTurn(node));
-            }else if(!node.parent.bash) {
-                actions.add("->\tMoved forward");
-            }
 
+            if (node.bash) {
+                actions.add("->\tBashed");
+                actions.add("->\tMoved Forward");
+            }
+            Robot.calculateTurn(node, actions);
+            if(!node.bash){
+                actions.add("->\tMoved Forward");
+            }
         }
 
     }
-public static void printOut(Node node) {
-    if (!visited) {
-        System.out.println("A* Score: " + node.timeTraveled);
-        visited = true;
-    }
 
-
-
-
+    public static void printOut(Node node) {
+        if (!visited) {
+            System.out.println("A* Score: " + node.timeTraveled);
+            visited = true;
+        }
 
 
 //    //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
@@ -313,6 +310,6 @@ public static void printOut(Node node) {
 //        GameState.getInstance().incrementNumActions();
 //        robotActions.add("forward");
 //    }
-}
+    }
 
 }
