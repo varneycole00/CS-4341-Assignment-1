@@ -62,43 +62,6 @@ public class GraphUtils {
         findEdges();
         Node goal = Node.aStar(graph[start[0]][start[1]], graph[end[0]][end[1]], h);
         Node.printPath(goal);
-        for(int i = 0 ; i < 5; i ++ ) {
-            for( int j = 0 ; j < 11; j++) {
-                Node n = graph[i][j];
-                if (wasUsedInPath(n.id, goal)) {
-//                    if(n.parent != null) {
-//                        if (n.parent.bash) {
-//                            System.out.print("B");
-//                        } else {
-//                            System.out.print("_");
-//                        }
-//                    }
-//                    else {
-//                        System.out.print("__");
-//                    }
-                    System.out.print("*** ");
-                } else {
-                    double tt = graph[i][j].timeTraveled;
-                    if (tt == Double.MAX_VALUE) {
-                        System.out.print("MAX ");
-                    } else {
-                        System.out.print(String.format(Integer.toString(graph[i][j].difficulty)) + "\t");
-
-                    }
-                }
-
-            }
-            System.out.println();
-        }
-    }
-
-    private static boolean wasUsedInPath(int id, Node node) {
-        while (node != null) {
-            if (id == node.id)
-                return true;
-            node = node.parent;
-        }
-        return false;
     }
 
     private static void findEdges(){
@@ -107,7 +70,6 @@ public class GraphUtils {
         Node right;
         Node up;
         Node down;
-        Node bash;
         for (Node[] a : graph){
             int x = 0;
             for (Node n : a){
@@ -197,72 +159,6 @@ public class GraphUtils {
 
 
     }
-
-
-    // TODO: Test this bish
-    public static Direction calculateDirection(int xStart, int yStart, int xEnd, int yEnd) throws Exception {
-        if(xStart != xEnd && yStart != yEnd) {
-            throw new Exception("Could not calculate direction");
-        } if(xStart > xEnd) {
-            return Direction.EAST;
-        } if(xStart < xEnd) {
-            return Direction.WEST;
-        } if(yStart > yEnd) {
-            return Direction.SOUTH;
-        } if(yStart < yEnd) {
-            return Direction.NORTH;
-        }
-        throw new Exception("could not calculate");
-    }
-
-
-
-
-//    private boolean adjMatrix[][];
-//    private int numNodes;
-//
-//    // Initialize the matrix
-//    public GraphUtils(int numNodes) {
-//        this.numNodes = numNodes;
-//        adjMatrix = new boolean[numNodes][numNodes];
-//    }
-//
-//    // Add edges
-//    public void addEdge(int i, int j) {
-//        adjMatrix[i][j] = true;
-//        adjMatrix[j][i] = true;
-//    }
-//
-//    // Remove edges
-//    public void removeEdge(int i, int j) {
-//        adjMatrix[i][j] = false;
-//        adjMatrix[j][i] = false;
-//    }
-//
-//    // Print the matrix
-//    public String toString() {
-//        StringBuilder s = new StringBuilder();
-//        for (int i = 0; i < numNodes; i++) {
-//            s.append(i + ": ");
-//            for (boolean j : adjMatrix[i]) {
-//                s.append((j ? 1 : 0) + " ");
-//            }
-//            s.append("\n");
-//        }
-//        return s.toString();
-//    }
-//
-//    public static void main(String args[]) {
-//        GraphUtils g = new GraphUtils(4);
-//
-//        g.addEdge(0, 1);
-//        g.addEdge(0, 2);
-//        g.addEdge(1, 2);
-//        g.addEdge(2, 0);
-//        g.addEdge(2, 3);
-//
-//        System.out.print(g.toString());
-//    }
 
 
 }

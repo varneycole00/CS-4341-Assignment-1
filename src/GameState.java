@@ -4,10 +4,8 @@ import java.util.List;
 
 public class GameState {
     private static GameState instance = null;
-    private int score = 0;
-    private int numActions = 0;
-    private int numNodesExpanded = 0;
-    private List<String> outputText = new ArrayList<String>();
+    private static int numActions = 0;
+    private static int numNodesExpanded = 0;
 
     /**
      * The constructor for GameState.
@@ -35,51 +33,21 @@ public class GameState {
         instance = null;
     }
 
-    public void incrementNumActions() {
-        numActions++;
+    public void incrementNumActions(int x) {
+        numActions += x;
     }
 
     public void incrementNodesExpanded() {
         numNodesExpanded++;
     }
 
-    public int getNumActions() {
+    public static int getNumActions() {
         return numActions;
     }
 
-    public int getNumNodesExpanded() {
+    public static int getNumNodesExpanded() {
         return numNodesExpanded;
     }
 
-    public void buildOutputString(MovementType movementType) {
-        outputText.add(movementType.toString());
-    }
-
-    public void generateOutputString(Node target) {
-        Node n = target;
-
-        List<Integer> ids = new ArrayList<>();
-
-        while (n.parent != null) {
-            ids.add(n.id);
-            n = n.parent;
-        }
-        ids.add(n.id);
-        Collections.reverse(ids);
-
-        for (int id : ids) {
-            System.out.print(id + " ");
-        }
-
-        System.out.println("");
-
-//        String ret = "";
-//
-//        for (String s: outputText) {
-//            ret = ret + s + "\n";
-//        }
-//
-//        return ret;
-    }
 }
 

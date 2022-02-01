@@ -7,7 +7,6 @@ public class Tests {
 
 
         Node goal = Node.aStar(graph[4][2], graph[0][10], 0);
-        //Node.printPath(goal);
 
         for(int i = 0 ; i < 5; i ++ ) {
             for( int j = 0 ; j < 11; j++) {

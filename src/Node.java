@@ -206,7 +206,8 @@ public class Node implements Comparable<Node> {
                     node.bash = bash;
 
                     if (node.parent.robot.robotDirection != edge.direction) {
-                        node.timeTraveled += node.parent.difficulty * .5;
+                        int numTurns = getNumTurns(node.parent.robot.robotDirection, edge.direction);
+                        node.timeTraveled += node.parent.difficulty * .5 * numTurns;
                         n.turnedPreviously = true;
                     }
 
@@ -220,7 +221,8 @@ public class Node implements Comparable<Node> {
                         node.timeTraveled = totalWeight;
                         node.bash = bash;
                         if (node.parent.robot.robotDirection != edge.direction) {
-                            node.timeTraveled += node.parent.difficulty * .5;
+                            int numTurns = getNumTurns(node.parent.robot.robotDirection, edge.direction);
+                            node.timeTraveled += node.parent.difficulty * .5 * numTurns;
                             n.turnedPreviously = true;
                         }
 
@@ -240,6 +242,20 @@ public class Node implements Comparable<Node> {
         return null;
     }
 
+    private static int getNumTurns(Direction n, Direction e){
+        if(n == Direction.NORTH && e == Direction.SOUTH)
+            return 2;
+        if(n == Direction.SOUTH && e == Direction.NORTH)
+            return 2;
+        if(n == Direction.EAST && e == Direction.WEST)
+            return 2;
+        if(n == Direction.WEST && e == Direction.EAST)
+            return 2;
+        return 1;
+    }
+
+    public boolean turn;
+
     // TODO: configure to meet assignment conditions
     public static void printPath(Node target) {
 
@@ -251,65 +267,39 @@ public class Node implements Comparable<Node> {
         List<Node> nodes = new ArrayList<Node>();
 
         while (n.parent != null) {
-            nodes.add(n);
+            nodes.add(0, n);
             n = n.parent;
         }
-        nodes.add(n);
+        nodes.add(0, n);
 
         List<String> actions = new ArrayList<String>();
-        Node goalNode = nodes.get(0);
         System.out.println("\n\n\n");
-        System.out.println("A* Score: " + goalNode.timeTraveled);
+        System.out.println("A* Score: " + (100 - target.timeTraveled));
         System.out.println();
-        System.out.println("Starting at the start node the robot performed these moves: ");
-        int counter = 1;
+        System.out.println("Starting at the start node, the robot performed these moves: ");
         for (Node node : nodes) {
 
-            if (node.parent == null) {
-                actions.add("->\tReached goal!!");
-                //System.out.println("");
-                //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-//                System.out.println(GameState.getInstance().getNumActions());
-//                System.out.println(GameState.getInstance().getNumNodesExpanded());
-                for (String s : actions) {
-                    System.out.println(s);
-                }
-                return;
-            }
-
+            actions = Robot.calculateTurn(node, actions);
 
             if (node.bash) {
                 actions.add("->\tBashed");
                 actions.add("->\tMoved Forward");
+                GameState.getInstance().incrementNumActions(2);
             }
-            Robot.calculateTurn(node, actions);
-            if(!node.bash){
+
+            if(!node.bash && node != n){
                 actions.add("->\tMoved Forward");
+                GameState.getInstance().incrementNumActions(1);
             }
         }
-
-    }
-
-    public static void printOut(Node node) {
-        if (!visited) {
-            System.out.println("A* Score: " + node.timeTraveled);
-            visited = true;
+        actions.add("->\tReached goal!!");
+        System.out.println(GameState.getNumActions());
+        System.out.println(GameState.getNumNodesExpanded());
+        for (String s : actions) {
+            System.out.println(s);
         }
 
-
-//    //System.out.println("Time Traveled: " + node.timeTraveled + " Node Difficulty: " + node.difficulty);
-//    if (node.bash) {
-//        GameState.getInstance().incrementNumActions();
-//        //System.out.println("\t Robot Bashed");
-//        robotActions.add("bash");
-//    }
-//
-//
-//         //System.out.println("\t Robot Turned ");
-//    } else {
-//        GameState.getInstance().incrementNumActions();
-//        robotActions.add("forward");
-//    }
     }
+
 
 }
