@@ -8,6 +8,8 @@ public class GraphUtils {
 
     static Node[][] graph;
     static Robot robot;
+    public static int[] start = new int[2];
+    public static int[] end = new int[2];
 
     public  GraphUtils(Node[][] graph) {
         this.graph = graph;
@@ -34,7 +36,7 @@ public class GraphUtils {
         return fileArray;
     }
 
-    public static void makeGraph(String fileName){
+    public static void makeGraph(String fileName, int h) throws Exception {
         String[][] fileArray = loadTerrain(fileName);
         graph = new Node[fileArray.length][fileArray[0].length];
         robot = new Robot(Direction.NORTH);
@@ -45,9 +47,12 @@ public class GraphUtils {
                 if (s.equals("S") || s.equals("s")) {
                     graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y, robot); //Make robot
                     graph[y][x].timeTraveled = 0;
+                    start = new int[]{y,x};
                 }
-                else if (s.equals("G") || s.equals("g"))
+                else if (s.equals("G") || s.equals("g")){
                     graph[y][x] = new Node(Integer.MAX_VALUE, 1, x, y);
+                    end = new int[]{y,x};
+                }
                 else
                     graph[y][x] = new Node(Integer.MAX_VALUE, Integer.parseInt(s), x, y);
                 x++;
@@ -55,6 +60,8 @@ public class GraphUtils {
             y++;
         }
         findEdges();
+        Node goal = Node.aStar(graph[start[0]][start[1]], graph[end[0]][end[1]], h);
+        Node.printPath(goal);
     }
 
     private static void findEdges(){

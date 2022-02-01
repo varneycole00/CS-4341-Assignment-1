@@ -1,14 +1,14 @@
 public class Tests {
     public static void main(String[] args) throws Exception {
         Node[][] graph;
-        GraphUtils.makeGraph("src/src/board1.txt");
+        GraphUtils.makeGraph("src/src/board1.txt", 0);
         graph = GraphUtils.getGraph();
 
 
 
 
         GameState.setInstance();
-        Node goal = Node.aStar(graph[4][2], graph[0][10], "zero");
+        Node goal = Node.aStar(graph[4][2], graph[0][10], 0);
         Node.printPath(goal);
 
         for(int i = 0 ; i < 5; i ++ ) {
@@ -36,7 +36,7 @@ public class Tests {
                     if (tt == Double.MAX_VALUE) {
                         System.out.print("MAX ");
                     } else {
-                        System.out.print(String.format("%03.0f ", graph[i][j].timeTraveled));
+                        System.out.print(String.format(Integer.toString(graph[i][j].difficulty)) + "\t");
 
                     }
                 }

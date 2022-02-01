@@ -71,24 +71,24 @@ public class Node implements Comparable<Node> {
 
     /* Todo: adjust this method to take in a flag and calculate heuristics differently
         depending on the A* mode) */
-    public double calculateHeuristic(Node target, String mode) throws Exception {
+    public double calculateHeuristic(Node target, int mode) throws Exception {
         switch(mode) {
 
-            case "zero":
+            case 1:
                 // Mode 'zero' where always zero
                 return 0;
-            case "min":
+            case 2:
                 // Mode 'min' (vertical, horizontal) that takes the smaller
-                return calculateProvided(target, "min");
-            case "max":
+                return calculateProvided(target, 2);
+            case 3:
                 // Mode: 'max' (vertical, horizontal) that takes the larger
-                return calculateProvided(target, "max");
-            case "sum":
+                return calculateProvided(target, 3);
+            case 4:
                 // Mode: 'sum' takes vertical + horizontal distance
-                return calculateProvided(target, "sum");
-            case "nonAdmissible":
+                return calculateProvided(target, 4);
+            case 5:
                 // Mode: 'TBA' that is non-admissible by multiplying 'sum' by 3
-                return 3 * calculateProvided(target,"sum");
+                return 3 * calculateProvided(target,5);
 
 
                 // TODO: Mode: 'TBA' admissible and dominates 'sum'
@@ -99,7 +99,7 @@ public class Node implements Comparable<Node> {
         }
     }
 
-    public double calculateProvided(Node target, String mode) throws Exception {
+    public double calculateProvided(Node target, int mode) throws Exception {
         int horizontalEstimate = 0;
         int verticalEstimate = 0;
 
@@ -151,20 +151,20 @@ public class Node implements Comparable<Node> {
         }
         // return minimum of the two
         switch(mode) {
-            case "min":
+            case 2:
                 if(horizontalEstimate <= verticalEstimate) {
                     return horizontalEstimate;
                 } else {
                     return verticalEstimate;
                 }
-            case "max":
+            case 3:
                 if(horizontalEstimate >= verticalEstimate) {
                     return horizontalEstimate;
                 }
                 else {
                     return verticalEstimate;
                 }
-            case "sum":
+            case 4:
                 return verticalEstimate + horizontalEstimate;
             default:
                 return (int)this.timeRemainingEstimate;
@@ -178,7 +178,7 @@ public class Node implements Comparable<Node> {
      * @param target
      * @return
      */
-    public static Node aStar(Node start, Node target, String mode) throws Exception {
+    public static Node aStar(Node start, Node target, int mode) throws Exception {
         // Priority Queue is just a heap built using priorities.
         PriorityQueue<Node> expanded = new PriorityQueue<>();
         PriorityQueue<Node> toExpand = new PriorityQueue<>();
