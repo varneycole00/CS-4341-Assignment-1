@@ -87,12 +87,11 @@ public class Node implements Comparable<Node> {
                 // Mode: 'sum' takes vertical + horizontal distance
                 return calculateProvided(target, 4);
             case 5:
+                // Hypotenuse calculation
+                return calculateProvided(target,5);
+            case 6:
                 // Mode: 'TBA' that is non-admissible by multiplying 'sum' by 3
                 return 3 * calculateProvided(target,5);
-
-
-                // TODO: Mode: 'TBA' admissible and dominates 'sum'
-
             default:
                 return this.timeRemainingEstimate;
 
@@ -166,6 +165,8 @@ public class Node implements Comparable<Node> {
                 }
             case 4:
                 return verticalEstimate + horizontalEstimate;
+            case 5:
+                return Math.sqrt(((verticalEstimate^2) + (horizontalEstimate^2)));
             default:
                 return (int)this.timeRemainingEstimate;
         }
@@ -252,35 +253,8 @@ public class Node implements Comparable<Node> {
         return null;
     }
 
-    public static void handleTurns(Node node, Edge edge) {
-        if(edge.direction != node.parent.robot.robotDirection) {
-//            int turns = node.parent.robot.calculateShortestTurns(edge.direction);
-            node.timeTraveled += node.parent.difficulty * .5;
-            node.turned2Prev = 1;
-            node.robot.robotDirection = edge.direction;
-        }
-    }
-    public static void handleBash(Node node, Edge edge) {
-        try {
-            if (node.robot.robotDirection == node.parent.robot.robotDirection &&
-                node.parent.robot.robotDirection == node.parent.parent.robot.robotDirection &&
-                node.parent.difficulty > 3) {
-                node.timeTraveled -= (node.parent.difficulty - 3);
-                node.parent.robot.setBashed2Prev(true);
-            }
-        } catch (Exception e) {
-//            throw new RuntimeException(e);
-        }
-    }
-
     // TODO: configure to meet assignment conditions
     public static void printPath(Node target){
-
-    // String output = GameState.getInstance().generateOutputString(target);
-    // System.out.println(output);
-//        while(target != null) {
-//           target = target.parent;
-//        }
 
         Node n = target;
 

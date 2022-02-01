@@ -17,7 +17,7 @@ public class main {
         String file = in.nextLine();
 
         System.out.println("input heuristic (integer 1-6)");
-        int heuristic = Integer.valueOf(in.nextLine());
+        int heuristic = Integer.parseInt(in.nextLine());
 
         try {
             GraphUtils.makeGraph(file, heuristic);
