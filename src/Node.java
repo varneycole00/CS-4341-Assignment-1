@@ -231,7 +231,7 @@ public class Node implements Comparable<Node> {
                         node.timeTraveled = totalWeight;
                         node.bash = bash;
                         if(node.parent.robot.robotDirection != edge.direction) {
-                            node.timeTraveled += node.difficulty * .5;
+                            node.timeTraveled += node.parent.difficulty * .5;
                             n.turnedPreviously = true;
                         }
 
