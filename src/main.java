@@ -15,24 +15,22 @@ public class main {
         // Main code block initiating execution
         Scanner in = new Scanner(System.in);
 
-        System.out.println("input path to file");
-        String file = in.nextLine();
+//        System.out.println("input path to file");
+//        String file = in.nextLine();
 
-        System.out.println("input heuristic (integer 1-6)");
-        int heuristic = Integer.parseInt(in.nextLine());
+        String file = "src/boardBIGFATTY.txt";
 
-        long startTime = System.currentTimeMillis();
+//        System.out.println("input heuristic (integer 1-6)");
+//        int heuristic = Integer.parseInt(in.nextLine());
+
+        int heuristic = 4;
+
 
         try {
             GraphUtils.makeGraph(file, heuristic);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        long endTime = System.currentTimeMillis();
-
-        NumberFormat formatter = new DecimalFormat("#0.00000");
-        System.out.print("Execution time is " + formatter.format((endTime - startTime) / 1000d) + " seconds");
 
     }
 

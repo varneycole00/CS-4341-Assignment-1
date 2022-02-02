@@ -1,6 +1,8 @@
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +62,16 @@ public class GraphUtils {
             y++;
         }
         findEdges();
+
+        long startTime = System.currentTimeMillis();
+
         Node goal = Node.aStar(graph[start[0]][start[1]], graph[end[0]][end[1]], h);
         Node.printPath(goal);
+
+        long endTime = System.currentTimeMillis();
+
+        NumberFormat formatter = new DecimalFormat("#0.00000");
+        System.out.print("Execution time is " + formatter.format((endTime - startTime) / 1000d) + " seconds");
     }
 
     private static void findEdges(){

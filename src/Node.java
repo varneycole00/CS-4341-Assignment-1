@@ -184,7 +184,14 @@ public class Node implements Comparable<Node> {
         start.AStarEstimate = start.timeTraveled + start.calculateHeuristic(target, mode);
         toExpand.add(start);
 
+
+        int iter = 0;
+
         while (!toExpand.isEmpty()) {
+//            System.out.println(iter);
+            if (++iter % 1000 == 0) {
+                System.out.println("Iteration " + iter);
+            }
             Node n = toExpand.peek();
             GameState.getInstance().incrementNodesExpanded();
 
