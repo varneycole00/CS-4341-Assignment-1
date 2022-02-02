@@ -5,8 +5,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BoardGeneration {
     public static void main(String[] args) throws Exception {
-        int width = 425;
-        int height = 425;
+        int width = 200;
+        int height = 200;
 
         int startX = 0;
         int startY = 0;
@@ -26,7 +26,7 @@ public class BoardGeneration {
                 } else if (x == endX && y == endY) {
                     out.append('G').append('\t');
                 } else {
-                    int num = ThreadLocalRandom.current().nextInt(1, 10);
+                    int num = ThreadLocalRandom.current().nextInt(1, 9);
                     out.append(num).append('\t');
                 }
             }

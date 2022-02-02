@@ -18,12 +18,12 @@ public class main {
 //        System.out.println("input path to file");
 //        String file = in.nextLine();
 
-        String file = "src/boardBIGFATTY.txt";
+        String file = "src/boardBigBoi.txt";
 
 //        System.out.println("input heuristic (integer 1-6)");
 //        int heuristic = Integer.parseInt(in.nextLine());
 
-        int heuristic = 4;
+        int heuristic = 1;
 
 
         try {

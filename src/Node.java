@@ -53,21 +53,23 @@ public class Node implements Comparable<Node> {
     }
 
     public static class Edge {
-        Edge(int difficulty, Node node, Direction direction, boolean bash) {
+        Edge(int difficulty, Node node, Direction direction, boolean bash, boolean turn) {
             this.difficulty = difficulty;
             this.node = node;
             this.direction = direction;
             this.bash = bash;
+            this.turn = turn;
         }
 
         public int difficulty;
         public Node node;
         public Direction direction;
         public boolean bash;
+        public boolean turn;
     }
 
-    public void addBranch(int difficulty, Node node, Direction direction, boolean bash) {
-        Edge newEdge = new Edge(difficulty, node, direction, bash);
+    public void addBranch(int difficulty, Node node, Direction direction, boolean bash, boolean turn) {
+        Edge newEdge = new Edge(difficulty, node, direction, bash, turn);
         neighbors.add(newEdge);
     }
 
@@ -202,17 +204,20 @@ public class Node implements Comparable<Node> {
             for (Node.Edge edge : n.neighbors) {
                 Node node = edge.node;
                 double totalWeight = n.timeTraveled + edge.difficulty;
+                int numTurns = getNumTurns(n.robot.robotDirection,edge.direction);
+
                 boolean bash = edge.bash;
+                boolean turnEdge = edge.turn;
+
 
                 if (!toExpand.contains(node) && !expanded.contains(node)) {
                     node.parent = n;
-                    node.timeTraveled = totalWeight;
                     node.robot = new Robot(edge.direction);
                     node.bash = bash;
 
-                    if (node.parent.robot.robotDirection != edge.direction) {
-                        int numTurns = getNumTurns(node.parent.robot.robotDirection, edge.direction);
-                        node.timeTraveled += Math.ceil(node.parent.difficulty * .5 * numTurns);
+                    node.timeTraveled = totalWeight;
+
+                    if(numTurns > 0) {
                         n.turnedPreviously = true;
                     }
 
@@ -223,13 +228,15 @@ public class Node implements Comparable<Node> {
                     if (totalWeight < node.timeTraveled) {
                         node.parent = n;
                         node.robot.robotDirection = edge.direction;
-                        node.timeTraveled = totalWeight;
                         node.bash = bash;
-                        if (node.parent.robot.robotDirection != edge.direction) {
-                            int numTurns = getNumTurns(node.parent.robot.robotDirection, edge.direction);
-                            node.timeTraveled += Math.ceil(node.parent.difficulty * .5 * numTurns);
-                            n.turnedPreviously = true;
+
+                        if(!turnEdge && numTurns > 0){
+                            totalWeight = n.timeTraveled + 20;
                         }
+                        if(turnEdge && numTurns == 0) {
+                            totalWeight = n.timeTraveled + 20;
+                        }
+                        node.timeTraveled = totalWeight;
 
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
 
@@ -256,6 +263,9 @@ public class Node implements Comparable<Node> {
             return 2;
         if(n == Direction.WEST && e == Direction.EAST)
             return 2;
+        if(n == e) {
+            return 0;
+        }
         return 1;
     }
 
@@ -278,8 +288,9 @@ public class Node implements Comparable<Node> {
         nodes.add(0, n);
 
         List<String> actions = new ArrayList<String>();
-        System.out.println("Score: \n" + (100 - target.timeTraveled));
-        System.out.println();
+
+
+
         for (Node node : nodes) {
 
             actions = Robot.calculateTurn(node, actions);
@@ -296,16 +307,20 @@ public class Node implements Comparable<Node> {
             }
         }
         actions.add("->\tReached goal!!");
+        System.out.println("Starting at the start node, the robot performed these moves: ");
+        for (String s : actions) {
+            System.out.println(s);
+        }
+        System.out.println();
+        System.out.println("Score: \n" + (100 - target.timeTraveled));
+        System.out.println();
         System.out.println("Number of actions performed:");
         System.out.println(GameState.getNumActions());
         System.out.println();
         System.out.println("Number of nodes expanded:");
         System.out.println(GameState.getNumNodesExpanded());
         System.out.println();
-        System.out.println("Starting at the start node, the robot performed these moves: ");
-        for (String s : actions) {
-            System.out.println(s);
-        }
+
 
     }
 
