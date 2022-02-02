@@ -2,7 +2,7 @@ public class Tests {
     public static void main(String[] args) throws Exception {
         GameState.setInstance();
         Node[][] graph;
-        GraphUtils.makeGraph("src/board1.txt", 0);
+        GraphUtils.makeGraph("src/board9.txt", 5);
         graph = GraphUtils.getGraph();
 
 
