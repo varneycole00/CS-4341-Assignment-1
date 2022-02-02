@@ -212,7 +212,7 @@ public class Node implements Comparable<Node> {
 
                     if (node.parent.robot.robotDirection != edge.direction) {
                         int numTurns = getNumTurns(node.parent.robot.robotDirection, edge.direction);
-                        node.timeTraveled += node.parent.difficulty * .5 * numTurns;
+                        node.timeTraveled += Math.ceil(node.parent.difficulty * .5 * numTurns);
                         n.turnedPreviously = true;
                     }
 
@@ -227,7 +227,7 @@ public class Node implements Comparable<Node> {
                         node.bash = bash;
                         if (node.parent.robot.robotDirection != edge.direction) {
                             int numTurns = getNumTurns(node.parent.robot.robotDirection, edge.direction);
-                            node.timeTraveled += node.parent.difficulty * .5 * numTurns;
+                            node.timeTraveled += Math.ceil(node.parent.difficulty * .5 * numTurns);
                             n.turnedPreviously = true;
                         }
 
