@@ -5,8 +5,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BoardGeneration {
     public static void main(String[] args) throws Exception {
-        int width = 150;
-        int height = 150;
+        int width = 700;
+        int height = 700;
 
         int startX = 0;
         int startY = 0;
@@ -35,7 +35,7 @@ public class BoardGeneration {
         }
 
 //        System.out.println(out.toString());
-        Files.write(Paths.get("src/board1.txt"), out.toString().getBytes(StandardCharsets.UTF_8));
+        Files.write(Paths.get("src/board8.txt"), out.toString().getBytes(StandardCharsets.UTF_8));
 
         int dx = endX - startX;
         int dy = endY - startY;
