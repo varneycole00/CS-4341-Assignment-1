@@ -35,7 +35,7 @@ public class BoardGeneration {
         }
 
 //        System.out.println(out.toString());
-        Files.write(Paths.get("src/boardBigBoi.txt"), out.toString().getBytes(StandardCharsets.UTF_8));
+        Files.write(Paths.get("src/board1.txt"), out.toString().getBytes(StandardCharsets.UTF_8));
 
         int dx = endX - startX;
         int dy = endY - startY;
