@@ -163,8 +163,6 @@ public class Node implements Comparable<Node> {
                 return Math.abs(yStart - yTarget) + Math.abs(xStart - xTarget);
             case 5:
                 return Math.sqrt(verticalEstimate ^ 2 + horizontalEstimate ^ 2);
-            case 6:
-                return 3 * Math.sqrt(verticalEstimate ^ 2 + horizontalEstimate ^ 2);
             default:
                 return (int) this.timeRemainingEstimate;
         }
@@ -217,9 +215,6 @@ public class Node implements Comparable<Node> {
 
                     node.timeTraveled = totalWeight;
 
-                    if(numTurns > 0) {
-                        n.turnedPreviously = true;
-                    }
 
                     // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
@@ -230,12 +225,6 @@ public class Node implements Comparable<Node> {
                         node.robot.robotDirection = edge.direction;
                         node.bash = bash;
 
-                        if(!turnEdge && numTurns > 0){
-                            totalWeight = n.timeTraveled + 20;
-                        }
-                        if(turnEdge && numTurns == 0) {
-                            totalWeight = n.timeTraveled + 20;
-                        }
                         node.timeTraveled = totalWeight;
 
                         node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);

@@ -23,7 +23,7 @@ public class main {
 //        System.out.println("input heuristic (integer 1-6)");
 //        int heuristic = Integer.parseInt(in.nextLine());
 
-        int heuristic = 1;
+        int heuristic = 6;
 
 
         try {

@@ -5,8 +5,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BoardGeneration {
     public static void main(String[] args) throws Exception {
-        int width = 200;
-        int height = 200;
+        int width = 150;
+        int height = 150;
 
         int startX = 0;
         int startY = 0;
