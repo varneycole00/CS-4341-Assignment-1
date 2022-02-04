@@ -16,7 +16,6 @@ public class AStar {
         String file = args[0];
         int heuristic = Integer.parseInt(args[1]);
 
-
         try {
             GraphUtils.makeGraph(file, heuristic);
         } catch (Exception e) {
