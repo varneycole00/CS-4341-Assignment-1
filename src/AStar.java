@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class main {
+public class AStar {
 
 
 
     public static void main(String[] args) {
         // Main code block initiating execution
-        Scanner in = new Scanner(System.in);
-        String file = "src/board10.txt";
-        int heuristic = 6;
+        String file = args[0];
+        int heuristic = Integer.parseInt(args[1]);
 
 
         try {
