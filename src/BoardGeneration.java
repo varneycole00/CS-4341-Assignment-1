@@ -12,10 +12,6 @@ public class BoardGeneration {
         int startY = 0;
         int endX = width - 1;
         int endY = height - 1;
-//        int startX = ThreadLocalRandom.current().nextInt(0, width);
-//        int startY = ThreadLocalRandom.current().nextInt(0, height);
-//        int endX = ThreadLocalRandom.current().nextInt(0, width);
-//        int endY = ThreadLocalRandom.current().nextInt(0, height);
 
         StringBuilder out = new StringBuilder();
 
@@ -34,7 +30,6 @@ public class BoardGeneration {
             out.append('\n');
         }
 
-//        System.out.println(out.toString());
         Files.write(Paths.get("src/board10.txt"), out.toString().getBytes(StandardCharsets.UTF_8));
 
         int dx = endX - startX;

@@ -14,16 +14,8 @@ public class main {
     public static void main(String[] args) {
         // Main code block initiating execution
         Scanner in = new Scanner(System.in);
-
-//        System.out.println("input path to file");
-//        String file = in.nextLine();
-
-        String file = "src/board6.txt";
-
-//        System.out.println("input heuristic (integer 1-6)");
-//        int heuristic = Integer.parseInt(in.nextLine());
-
-        int heuristic = 5;
+        String file = "src/board10.txt";
+        int heuristic = 6;
 
 
         try {

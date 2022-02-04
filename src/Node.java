@@ -6,17 +6,13 @@ import java.util.PriorityQueue;
 public class Node implements Comparable<Node> {
 
     public static Node[][] graph = GraphUtils.getGraph();
-
     private static int idCounter = 0;
     public int id;
     public int difficulty;
     public boolean bash = false;
     public boolean turnedPreviously = false;
-
     public Node parent = null;
     public List<Edge> neighbors;
-
-
     public double AStarEstimate = Double.MAX_VALUE;
     public double timeTraveled = Double.MAX_VALUE;
     public double timeRemainingEstimate;
@@ -24,6 +20,7 @@ public class Node implements Comparable<Node> {
     public int yPos;
     Robot robot;
     public int turned2Prev;
+    public boolean turn;
 
     Node(double h, int difficulty, int xPos, int yPos, Robot robot) {
         this.timeRemainingEstimate = h;
@@ -73,8 +70,6 @@ public class Node implements Comparable<Node> {
         neighbors.add(newEdge);
     }
 
-    /* Todo: adjust this method to take in a flag and calculate heuristics differently
-        depending on the A* mode) */
     public double calculateHeuristic(Node target, int mode) throws Exception {
         switch (mode) {
 
@@ -103,8 +98,6 @@ public class Node implements Comparable<Node> {
     }
 
     public double calculateProvided(Node target, int mode) throws Exception {
-
-
         // acquire desired x and y positioning
         int xTarget = target.xPos;
         int yTarget = target.yPos;
@@ -118,18 +111,15 @@ public class Node implements Comparable<Node> {
         Direction robotDirection = startDirection;
 
         // calculate estimate of horizontal movements only
-
         int horizontalEstimate = 0;
         int verticalEstimate = 0;
         if (xStart > xTarget) {
-            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             if (robotDirection != Direction.WEST)
                 horizontalEstimate++;
             for (int i = xStart; i >= xTarget; i--) {
                 horizontalEstimate += graph[yStart][i].difficulty;
             }
         } else if (xStart < xTarget) {
-            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             if (robotDirection != Direction.EAST)
                 horizontalEstimate++;
             for (int i = xStart; i <= xTarget; i++) {
@@ -138,14 +128,12 @@ public class Node implements Comparable<Node> {
         }
         // calculate estimate of vertical movements only
         if (yStart > yTarget) {
-            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             if (robotDirection != Direction.NORTH)
                 verticalEstimate++;
             for (int i = yStart; i >= yTarget; i--) {
                 verticalEstimate += graph[i][xStart].difficulty;
             }
         } else if (yStart < yTarget) {
-            // Todo: maybe ?? see if robot is facing in the right direction and if not adjust estimate
             if (robotDirection != Direction.SOUTH)
                 verticalEstimate++;
             for (int i = yStart; i <= yTarget; i++) {
@@ -188,10 +176,6 @@ public class Node implements Comparable<Node> {
         int iter = 0;
 
         while (!toExpand.isEmpty()) {
-//            System.out.println(iter);
-            if (++iter % 1000 == 0) {
-                System.out.println("Iteration " + iter);
-            }
             Node n = toExpand.peek();
             GameState.getInstance().incrementNodesExpanded();
 
@@ -202,11 +186,7 @@ public class Node implements Comparable<Node> {
             for (Node.Edge edge : n.neighbors) {
                 Node node = edge.node;
                 double totalWeight = n.timeTraveled + edge.difficulty;
-                int numTurns = getNumTurns(n.robot.robotDirection,edge.direction);
-
                 boolean bash = edge.bash;
-                boolean turnEdge = edge.turn;
-
 
                 if (!toExpand.contains(node) && !expanded.contains(node)) {
                     node.parent = n;
@@ -215,8 +195,6 @@ public class Node implements Comparable<Node> {
 
                     node.timeTraveled = totalWeight;
 
-
-                    // Will likely have to handle direction change somewhere!!
                     node.AStarEstimate = node.timeTraveled + node.calculateHeuristic(target, mode);
                     toExpand.add(node);
                 } else {
@@ -243,24 +221,6 @@ public class Node implements Comparable<Node> {
         return null;
     }
 
-    private static int getNumTurns(Direction n, Direction e){
-        if(n == Direction.NORTH && e == Direction.SOUTH)
-            return 2;
-        if(n == Direction.SOUTH && e == Direction.NORTH)
-            return 2;
-        if(n == Direction.EAST && e == Direction.WEST)
-            return 2;
-        if(n == Direction.WEST && e == Direction.EAST)
-            return 2;
-        if(n == e) {
-            return 0;
-        }
-        return 1;
-    }
-
-    public boolean turn;
-
-    // TODO: configure to meet assignment conditions
     public static void printPath(Node target) {
 
         Node n = target;
@@ -278,10 +238,7 @@ public class Node implements Comparable<Node> {
 
         List<String> actions = new ArrayList<String>();
 
-
-
         for (Node node : nodes) {
-
             actions = Robot.calculateTurn(node, actions);
 
             if (node.bash) {
@@ -309,9 +266,5 @@ public class Node implements Comparable<Node> {
         System.out.println("Number of nodes expanded:");
         System.out.println(GameState.getNumNodesExpanded());
         System.out.println();
-
-
     }
-
-
 }

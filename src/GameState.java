@@ -26,9 +26,6 @@ public class GameState {
         return instance;
     }
 
-    /**
-     * Sets the current instance of GameState to null.
-     */
     public static void setInstance() {
         instance = null;
     }
