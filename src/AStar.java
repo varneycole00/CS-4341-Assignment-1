@@ -9,8 +9,6 @@ import java.util.Scanner;
 
 public class AStar {
 
-
-
     public static void main(String[] args) {
         // Main code block initiating execution
         String file = args[0];

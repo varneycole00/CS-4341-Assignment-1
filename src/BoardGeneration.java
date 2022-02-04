@@ -4,6 +4,7 @@ import java.nio.file.Paths;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class BoardGeneration {
+
     public static void main(String[] args) throws Exception {
         int width = 425;
         int height = 425;
